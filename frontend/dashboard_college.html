@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>College Dashboard - Course Affiliation Requests</title>
+  
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+      rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "PT Sans", sans-serif;
+        background-color: #eef2f7;
+        overflow-x: hidden;
+        color: #333;
+      }
+
+      /* HEADER */
+      .main-header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #004080;
+        color: white;
+        padding: 15px 30px;
+        height: 70px;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      }
+
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .logo {
+        height: 40px;
+        width: 40px;
+        object-fit: contain;
+      }
+
+      .header-left h3 {
+        font-size: 20px;
+        margin: 0;
+        animation: slideIn 0.6s ease;
+      }
+
+      .header-right {
+        font-size: 16px;
+        text-align: right;
+        animation: fadeIn 1s ease;
+      }
+
+      .college-name {
+        font-weight: bold;
+        color: yellow;
+      }
+
+      /* LAYOUT */
+      .layout {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .nav__cont {
+        width: 80px;
+        background: #004080;
+        height: 100vh;
+        position: fixed;
+        top: 70px;
+        left: 0;
+        transition: width 0.3s ease;
+        overflow: hidden;
+      }
+
+      .nav__cont:hover {
+        width: 220px;
+      }
+
+      .nav {
+        list-style: none;
+        padding: 1rem 0;
+      }
+
+      .nav__items {
+        display: flex;
+        align-items: center;
+        padding: 20px 20px;
+        transition: background-color 0.3s ease;
+      }
+
+      .nav__items:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        transform: translateX(5px);
+      }
+
+      .nav__items a,
+      .nav__items button {
+        color: white;
+        text-decoration: none;
+        font-size: 1rem;
+        white-space: nowrap;
+        opacity: 0;
+        margin: 20px;
+        transform: translateX(-10px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
+
+      .nav__cont:hover .nav__items a,
+      .nav__cont:hover .nav__items button {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      main {
+        margin-left: 80px;
+        padding: 30px;
+        flex-grow: 1;
+        transition: margin-left 0.3s ease;
+      }
+
+      .nav__cont:hover ~ main {
+        margin-left: 220px;
+      }
+
+      /* CONTENT */
+      section {
+        background: white;
+        border-radius: 8px;
+        padding: 24px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        margin-bottom: 32px;
+        animation: fadeIn 0.6s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      section h2 {
+        font-size: 20px;
+        margin-bottom: 20px;
+        color: #004080;
+      }
+
+      form input,
+      form select,
+      form textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 16px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-size: 15px;
+        transition: border 0.3s ease;
+      }
+
+      form input:focus,
+      form select:focus,
+      form textarea:focus {
+        border: 1px solid #004080;
+        outline: none;
+      }
+
+      form button {
+        background-color: #004080;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s;
+      }
+
+      form button:hover {
+        background-color: #002d5e;
+        transform: scale(1.05);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      table th,
+      table td {
+        padding: 12px;
+        border: 1px solid #ddd;
+        font-size: 14px;
+      }
+
+      table th {
+        background-color: #f0f0f0;
+        color: #003366;
+        text-align: left;
+      }
+
+      .notification {
+        padding: 16px;
+        border-radius: 6px;
+        margin-bottom: 12px;
+        font-size: 15px;
+      }
+
+      .notification.yellow {
+        background-color: #fff8c4;
+        border-left: 5px solid #ffca28;
+      }
+
+      .notification.green {
+        background-color: #c8f7c5;
+        border-left: 5px solid #4caf50;
+      }
+
+      /* Document Upload Styles */
+      .file-upload {
+        margin: 20px 0;
+      }
+
+      .file-upload-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+      }
+
+      .file-input-wrapper {
+        position: relative;
+        margin-bottom: 15px;
+      }
+
+      .file-input {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+      }
+
+      .file-input-label {
+        display: inline-block;
+        padding: 10px 15px;
+        background-color: #f0f0f0;
+        border: 1px dashed #ccc;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .file-input-label:hover {
+        background-color: #e0e0e0;
+      }
+
+      .file-name {
+        margin-left: 10px;
+        font-size: 14px;
+        color: #666;
+      }
+
+      .document-list {
+        margin-top: 20px;
+      }
+
+      .document-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid #eee;
+      }
+
+      .document-actions a {
+        color: #004080;
+        margin-left: 10px;
+        text-decoration: none;
+      }
+
+      .document-actions a:hover {
+        text-decoration: underline;
+      }
+
+      /* Status badges */
+      .status-badge {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      .status-pending {
+        background-color: #fff3cd;
+        color: #856404;
+      }
+
+      .status-approved {
+        background-color: #d4edda;
+        color: #155724;
+      }
+
+      .status-rejected {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+
+      .status-under-review {
+        background-color: #cce5ff;
+        color: #004085;
+      }
+      .status-submitted {
+        background-color: #cce5ff;
+        color: #37fb99;
+      }
+
+      /* FOOTER */
+      footer {
+        background-color: #004080;
+        color: white;
+        text-align: center;
+        padding: 16px;
+        font-size: 14px;
+        margin-top: 30px;
+        transition: background-color 0.3s ease;
+      }
+
+      /* MEDIA */
+      @media (max-width: 768px) {
+        .nav__cont {
+          position: relative;
+          width: 100%;
+          height: auto;
+        }
+
+        main {
+          margin-left: 0;
+        }
+
+        footer {
+          position: relative;
+        }
+      }
+
+      /* Loading spinner */
+      .spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255,255,255,.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 1s ease-in-out infinite;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="main-header">
+      <div class="header-left">
+        <img src="logo.jpg" alt="Logo" class="logo" />
+        <h3>AcademiaAffiliation</h3>
+      </div>
+      <div class="header-right">
+        <span>Welcome, </span>
+        <span id="collegeNameHeader" class="college-name"></span>
+      </div>
+    </header>
+
+    <!-- Sidebar -->
+    <nav class="nav__cont">
+      <ul class="nav">
+        <li class="nav__items">
+          <a href="dashboard_college.html">Dashboard</a>
+        </li>
+        <li class="nav__items">
+          <a href="#form">New Application</a>
+        </li>
+        <li class="nav__items">
+          <a href="#track">Application Status</a>
+        </li>
+        <li class="nav__items">
+          <button id="logoutBtn">Logout</button>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+      <section id="form">
+        <h2>Submit Course Affiliation Request</h2>
+        <form id="affiliationForm">
+          <input type="hidden" id="collegeId" name="collegeId" />
+
+          <div class="form-group">
+            <label for="courseName">Course Title</label>
+            <input
+              id="courseName"
+              name="courseName"
+              type="text"
+              placeholder="Enter course name"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="courseDuration">Duration</label>
+            <select id="courseDuration" name="courseDuration" required>
+              <option value="" disabled selected>Select Duration</option>
+              <option value="6 Months">6 Months</option>
+              <option value="1 Year">1 Year</option>
+              <option value="2 Years">2 Years</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="intake">Intake Capacity</label>
+            <input
+              id="intake"
+              name="intake"
+              type="number"
+              placeholder="Number of students"
+              min="1"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="facultyInfo">Faculty Information</label>
+            <textarea
+              id="facultyInfo"
+              name="facultyInfo"
+              placeholder="List faculty members and their qualifications"
+              rows="3"
+              required
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="infrastructure">Infrastructure Details</label>
+            <textarea
+              id="infrastructure"
+              name="infrastructure"
+              placeholder="Describe available facilities and equipment"
+              rows="3"
+              required
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="courseFee">Course Fee (per year)</label>
+            <input
+              id="courseFee"
+              name="courseFee"
+              type="number"
+              placeholder="Amount in local currency"
+              min="0"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="affiliationType">Affiliation Type</label>
+            <select id="affiliationType" name="affiliationType" required>
+              <option value="" disabled selected>Select Type</option>
+              <option value="New">New</option>
+              <option value="Renewal">Renewal</option>
+            </select>
+          </div>
+
+          <div class="file-upload">
+            <label class="file-upload-label">Supporting Documents</label>
+            <p class="file-description">Upload required documents (PDF, DOC, JPG, PNG, max 10MB each)</p>
+            
+            <div class="file-input-wrapper">
+              <input type="file" id="documentUpload" class="file-input" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+              <label for="documentUpload" class="file-input-label">
+                <i class="fas fa-cloud-upload-alt"></i> Choose Files
+              </label>
+              <span id="fileNames" class="file-name">No files selected</span>
+            </div>
+            
+            <div id="documentList" class="document-list">
+              <!-- Uploaded documents will appear here -->
+            </div>
+          </div>
+
+          <button type="submit" id="submitBtn">
+            Submit Request
+          </button>
+        </form>
+      </section>
+
+      <section id="track">
+        <h2>Track Your Applications</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>Course Name</th>
+              <th>Affiliation Type</th>
+              <th>Date of Submission</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="applicationsTableBody">
+            <!-- JS will populate -->
+          </tbody>
+        </table>
+      </section>
+
+      <section id="notify">
+        <h2>Notifications</h2>
+        <div id="notificationsContainer">
+          <!-- Dynamic notifications will appear here -->
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      &copy; 2025 University Affiliation System. All rights reserved.
+    </footer>
+    <script>
+      const token = localStorage.getItem("token");
+if (!token) {
+  alert("Please login first.");
+  window.location.href = "login.html";
+}
+
+    </script>
+  </body>
+</html>

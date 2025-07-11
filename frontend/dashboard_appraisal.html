@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Appraisal Dashboard</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: "Roboto", sans-serif;
+      background: #f0f4f8;
+      color: #333;
+    }
+    header {
+      background: #004080;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    header .left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    header img {
+      height: 40px;
+    }
+    header h1 {
+      font-size: 22px;
+    }
+    header .right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .logout-btn {
+      padding: 8px 15px;
+      background: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .logout-btn:hover {
+      background: #c0392b;
+    }
+
+    nav {
+      background: linear-gradient(to left, #013058, #000428);
+      padding: 20px 15px;
+      height: calc(100vh - 70px);
+      position: fixed;
+      top: 70px;
+      width: 200px;
+      color: white;
+    }
+    nav ul {
+      list-style: none;
+    }
+    nav li {
+      margin: 20px 0;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    main {
+      margin-left: 220px;
+      padding: 30px;
+    }
+
+    section {
+      background: white;
+      padding: 50px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-bottom: 100px;
+    }
+    section h2{
+      color: #141414;
+      margin-bottom: 30px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    th, td {
+      padding: 15px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+    th {
+      background-color: #f5f5f5;
+      color: #004080;
+    }
+    button {
+      padding: 8px 15px;
+      background: #73ade8;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #003366;
+    }
+    .status-approved { color: green; font-weight: bold; }
+    .status-rejected { color: red; font-weight: bold; }
+    .status-pending,
+    .status-under-review { color: orange; font-weight: bold; }
+
+    textarea, input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      margin-bottom: 15px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    footer {
+      background-color: #013058;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      
+      bottom: 0;
+      width: calc(100% - 200px);
+      margin-left: 200px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="left">
+      <img src="logo.jpg" alt="Logo" />
+      <h1>AcademiaAffiliation</h1>
+    </div>
+    <div class="right">
+      <span>Welcome, Appraisal Officer</span>
+      <button class="logout-btn" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+    </div>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="#assigned">Assigned Applications</a></li>
+      <li><a href="#review">Submit Verification</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <!-- Assigned Applications -->
+    <section id="assigned">
+      <h2>Assigned Applications</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>S.No</th>
+            <th>College Name</th>
+            <th>Course</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="assignedTableBody">
+          <!-- Filled by JS -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Verification Form -->
+    <section id="review">
+      <h2>Submit Verification</h2>
+      <form id="verificationForm">
+        <label>College Name:</label>
+        <input type="text" name="college" readonly />
+
+        <label>Course Title:</label>
+        <input type="text" name="course" readonly />
+
+        <label>Verification Notes:</label>
+        <textarea name="notes" rows="4" placeholder="Mention site visit or document checks..." required></textarea>
+
+        <label>Recommendation:</label>
+        <select name="recommendation" required>
+          <option value="">Select</option>
+          <option value="Approved">Approve</option>
+          <option value="Rejected">Reject</option>
+        </select>
+
+        <button type="submit">Submit Verification</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2025 AcademiaAffiliation | All rights reserved.
+  </footer>
+
+  
+</body>
+</html>
+
+
+ 
