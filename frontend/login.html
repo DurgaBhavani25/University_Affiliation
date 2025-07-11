@@ -225,78 +225,23 @@
         <p style="text-align: center; margin-top: 10px; margin-bottom: 20px;">
           <a href="#" style="color: #00c6ff; text-decoration: underline;">Forgot Password?</a>
         </p>
+<!-- Feedback Message -->
+<p id="message" style="text-align: center; color: yellow; margin-bottom: 10px;"></p>
 
-        <!-- Submit Button -->
-        <button type="submit" id="loginBtn">Login</button>
+<!-- Submit Button -->
+<button type="submit" id="loginBtn">Login</button>
+
+        <!-- Submit Button --> 
       </form>
     </div>
   </div>
-
+ 
   <!-- Footer -->
   <footer class="site-footer">
     &copy; 2025 AcademiaAffiliation | All Rights Reserved
   </footer>
 
   <!-- Script -->
-  <script>
-  const form = document.getElementById("loginForm");
-  const loginBtn = document.getElementById("loginBtn");
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    
-    // Disable button while processing
-    loginBtn.disabled = true;
-    loginBtn.innerHTML = '<span class="spinner"></span> Logging in...';
-
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
-
-    try {
-      const response = await fetch("http://localhost:5000/api/college/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ email, password })
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Store token and name
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("collegeName", data.college.name);
-        
-        alert("Login successful!");
-        window.location.href = "dashboard_college.html"; // ✅ redirect to your dashboard
-      } else {
-        alert(data.message || "Login failed.");
-      }
-
-    } catch (error) {
-      console.error("Login error:", error);
-      alert("Something went wrong. Try again.");
-    }
-
-    loginBtn.disabled = false;
-    loginBtn.innerHTML = "Login";
-  });
-
-  // Toggle Password Visibility
-  function togglePassword() {
-    const passwordInput = document.getElementById("password");
-    const toggleBtn = document.querySelector(".toggle-password");
-    if (passwordInput.type === "password") {
-      passwordInput.type = "text";
-      toggleBtn.textContent = "Hide";
-    } else {
-      passwordInput.type = "password";
-      toggleBtn.textContent = "Show";
-    }
-  }
-</script>
-
-  
+  <script src="login.js"></script>
 </body>
 </html>

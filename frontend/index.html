@@ -577,15 +577,16 @@
     <div class="role-buttons">
       <div class="role-card">
         <i class="fas fa-user-shield role-icon"></i>
-        <button onclick="selectRole('admin')">Admin</button>
+        <button onclick="location.href='login.html?role=admin'">Admin</button>
+
       </div>
       <div class="role-card">
         <i class="fas fa-university role-icon"></i>
-        <button onclick="selectRole('college')">College</button>
+        <button onclick="location.href='login.html?role=college'">College</button>
       </div>
       <div class="role-card">
         <i class="fas fa-user-check role-icon"></i>
-        <button onclick="selectRole('appraisal')">Appraisal</button>
+       <button onclick="location.href='login.html?role=appraisal'">Login as Appraisal</button>
       </div>
     </div>
     </div>
@@ -670,12 +671,6 @@
     sections.forEach(section => {
       observer.observe(section);
     });
-
-
-    function selectRole(role) {
-      localStorage.setItem("selectedRole", role);
-      window.location.href = "login.html";
-    }
   </script>
 </body>
 
