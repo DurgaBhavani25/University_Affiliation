@@ -1,237 +1,590 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Appraisal Dashboard</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
-    rel="stylesheet"
-  />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-  />
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: "Roboto", sans-serif;
-      background: #f0f4f8;
-      color: #333;
-    }
-    header {
-      background: #004080;
-      color: white;
-      padding: 15px 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-    header .left {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-    header img {
-      height: 40px;
-    }
-    header h1 {
-      font-size: 22px;
-    }
-    header .right {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-    .logout-btn {
-      padding: 8px 15px;
-      background: #e74c3c;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .logout-btn:hover {
-      background: #c0392b;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Appraisal Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-    nav {
-      background: linear-gradient(to left, #013058, #000428);
-      padding: 20px 15px;
-      height: calc(100vh - 70px);
-      position: fixed;
-      top: 70px;
-      width: 200px;
-      color: white;
-    }
-    nav ul {
-      list-style: none;
-    }
-    nav li {
-      margin: 20px 0;
-    }
-    nav a {
-      color: white;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    nav a:hover {
-      text-decoration: underline;
-    }
+      body {
+        font-family: "PT Sans", sans-serif;
+        background-color: #eef2f7;
+        overflow-x: hidden;
+        color: #333;
+      }
 
-    main {
-      margin-left: 220px;
-      padding: 30px;
-    }
+      /* HEADER */
+      .main-header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #004080;
+        color: white;
+        padding: 15px 30px;
+        height: 70px;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      }
 
-    section {
-      background: white;
-      padding: 50px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      margin-bottom: 100px;
-    }
-    section h2{
-      color: #141414;
-      margin-bottom: 30px;
-    }
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
-    th, td {
-      padding: 15px;
-      border: 1px solid #ccc;
-      text-align: left;
-    }
-    th {
-      background-color: #f5f5f5;
-      color: #004080;
-    }
-    button {
-      padding: 8px 15px;
-      background: #73ade8;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #003366;
-    }
-    .status-approved { color: green; font-weight: bold; }
-    .status-rejected { color: red; font-weight: bold; }
-    .status-pending,
-    .status-under-review { color: orange; font-weight: bold; }
+      .logo {
+        height: 40px;
+        width: 40px;
+        object-fit: contain;
+      }
 
-    textarea, input, select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      margin-bottom: 15px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
+      .header-left h3 {
+        font-size: 20px;
+        margin: 0;
+        animation: slideIn 0.6s ease;
+      }
 
-    footer {
-      background-color: #013058;
-      color: white;
-      text-align: center;
-      padding: 15px;
-      
-      bottom: 0;
-      width: calc(100% - 200px);
-      margin-left: 200px;
-    }
-  </style>
-</head>
+      .header-right {
+        font-size: 16px;
+        text-align: right;
+        animation: fadeIn 1s ease;
+      }
 
-<body>
-  <header>
-    <div class="left">
-      <img src="logo.jpg" alt="Logo" />
-      <h1>AcademiaAffiliation</h1>
-    </div>
-    <div class="right">
-      <span>Welcome, Appraisal Officer</span>
-      <button class="logout-btn" onclick="logout()">
-        <i class="fas fa-sign-out-alt"></i> Logout
-      </button>
-    </div>
-  </header>
+      .officer-name {
+        font-weight: bold;
+        color: yellow;
+      }
 
-  <nav>
-    <ul>
-      <li><a href="#assigned">Assigned Applications</a></li>
-      <li><a href="#review">Submit Verification</a></li>
-    </ul>
-  </nav>
+      /* LAYOUT */
+      .layout {
+        display: flex;
+        min-height: 100vh;
+      }
 
-  <main>
-    <!-- Assigned Applications -->
-    <section id="assigned">
-      <h2>Assigned Applications</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>S.No</th>
-            <th>College Name</th>
-            <th>Course</th>
-            <th>Type</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="assignedTableBody">
-          <!-- Filled by JS -->
-        </tbody>
-      </table>
-    </section>
+      .nav__cont {
+        width: 80px;
+        background: #004080;
+        height: 100vh;
+        position: fixed;
+        top: 70px;
+        left: 0;
+        transition: width 0.3s ease;
+        overflow: hidden;
+      }
 
-    <!-- Verification Form -->
-    <section id="review">
-      <h2>Submit Verification</h2>
-      <form id="verificationForm">
-        <label>College Name:</label>
-        <input type="text" name="college" readonly />
+      .nav__cont:hover {
+        width: 220px;
+      }
 
-        <label>Course Title:</label>
-        <input type="text" name="course" readonly />
+      .nav {
+        list-style: none;
+        padding: 1rem 0;
+      }
 
-        <label>Verification Notes:</label>
-        <textarea name="notes" rows="4" placeholder="Mention site visit or document checks..." required></textarea>
+      .nav__items {
+        display: flex;
+        align-items: center;
+        padding: 20px 20px;
+        transition: background-color 0.3s ease;
+      }
 
-        <label>Recommendation:</label>
-        <select name="recommendation" required>
-          <option value="">Select</option>
-          <option value="Approved">Approve</option>
-          <option value="Rejected">Reject</option>
-        </select>
+      .nav__items:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        transform: translateX(5px);
+      }
 
-        <button type="submit">Submit Verification</button>
-      </form>
-    </section>
-  </main>
+      .nav__items a,
+      .nav__items button {
+        color: white;
+        text-decoration: none;
+        font-size: 1rem;
+        white-space: nowrap;
+        opacity: 0;
+        margin: 20px;
+        transform: translateX(-10px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
 
-  <footer>
-    &copy; 2025 AcademiaAffiliation | All rights reserved.
-  </footer>
+      .nav__cont:hover .nav__items a,
+      .nav__cont:hover .nav__items button {
+        opacity: 1;
+        transform: translateX(0);
+      }
 
-  
-</body>
+      main {
+        margin-left: 80px;
+        padding: 30px;
+        flex-grow: 1;
+        transition: margin-left 0.3s ease;
+      }
+
+      .nav__cont:hover ~ main {
+        margin-left: 220px;
+      }
+
+      /* CONTENT */
+      section {
+        background: white;
+        border-radius: 8px;
+        padding: 24px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        margin-bottom: 32px;
+        animation: fadeIn 0.6s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      section h2 {
+        font-size: 20px;
+        margin-bottom: 20px;
+        color: #004080;
+      }
+
+      /* Tables */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      table th,
+      table td {
+        padding: 12px;
+        border: 1px solid #ddd;
+        font-size: 14px;
+      }
+
+      table th {
+        background-color: #f0f0f0;
+        color: #003366;
+        text-align: left;
+      }
+
+      /* Status badges */
+      .status-badge {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: bold;
+        display: inline-block;
+      }
+
+      .status-pending {
+        background-color: #fff3cd;
+        color: #856404;
+      }
+
+      .status-approved {
+        background-color: #d4edda;
+        color: #155724;
+      }
+
+      .status-rejected {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+
+      .status-under-review {
+        background-color: #cce5ff;
+        color: #004085;
+      }
+
+      /* Buttons */
+      .btn {
+        padding: 5px 10px;
+        border: none;
+        border-radius: 4px;
+        font-size: 12px;
+        color: white;
+        cursor: pointer;
+        margin-right: 5px;
+      }
+
+      .btn-view {
+        background: #007bff;
+      }
+      .btn-approve {
+        background: #28a745;
+      }
+      .btn-reject {
+        background: #dc3545;
+      }
+
+      /* Forms */
+      form input,
+      form select,
+      form textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 16px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-size: 15px;
+        transition: border 0.3s ease;
+      }
+
+      form input:focus,
+      form select:focus,
+      form textarea:focus {
+        border: 1px solid #004080;
+        outline: none;
+      }
+
+      form button {
+        background-color: #004080;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s;
+      }
+
+      form button:hover {
+        background-color: #002d5e;
+        transform: scale(1.05);
+      }
+
+      /* FOOTER */
+      footer {
+        background-color: #004080;
+        color: white;
+        text-align: center;
+        padding: 16px;
+        font-size: 14px;
+        margin-top: 30px;
+        transition: background-color 0.3s ease;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .nav__cont {
+          position: relative;
+          width: 100%;
+          height: auto;
+        }
+
+        main {
+          margin-left: 0;
+        }
+
+        footer {
+          position: relative;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="main-header">
+      <div class="header-left">
+        <img src="logo.jpg" alt="Logo" class="logo" />
+        <h3>AcademiaAffiliation</h3>
+      </div>
+      <div class="header-right">
+        <span>Welcome, </span>
+        <span id="officerNameHeader" class="officer-name"
+          >Appraisal Officer</span
+        >
+      </div>
+    </header>
+    <nav class="nav__cont">
+      <ul class="nav">
+        <li class="nav__items">
+          <a href="#" class="active" onclick="showSection('assigned')">
+            <i class="fas fa-clipboard-list"></i> Assigned Applications
+          </a>
+        </li>
+        <li class="nav__items">
+          <a href="#" onclick="showSection('review')">
+            <i class="fas fa-clipboard-check"></i> Submit Verification
+          </a>
+        </li>
+        <li class="nav__items">
+          <a href="#" onclick="showSection('profile')">
+            <i class="fas fa-user-circle"></i> My Profile
+          </a>
+        </li>
+        <li class="nav__items">
+          <button id="logoutBtn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+      <!-- Assigned Applications Section -->
+      <section id="assigned" class="section active">
+        <h2>Assigned Applications</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>College Name</th>
+              <th>Course</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>ABC University</td>
+              <td>Computer Science</td>
+              <td>New</td>
+              <td>
+                <span class="status-badge status-under-review"
+                  >Under Review</span
+                >
+              </td>
+              <td>
+                <button class="btn btn-view" onclick="viewApplication(101)">
+                  View
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>XYZ College</td>
+              <td>Business Administration</td>
+              <td>Renewal</td>
+              <td>
+                <span class="status-badge status-pending">Pending Visit</span>
+              </td>
+              <td>
+                <button class="btn btn-view" onclick="viewApplication(102)">
+                  View
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>PQR Institute</td>
+              <td>Engineering</td>
+              <td>New</td>
+              <td>
+                <span class="status-badge status-under-review"
+                  >Under Review</span
+                >
+              </td>
+              <td>
+                <button class="btn btn-view" onclick="viewApplication(103)">
+                  View
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Verification Form Section -->
+      <section id="review" class="section">
+        <h2>Submit Verification</h2>
+        <form id="verificationForm">
+          <div class="form-group">
+            <label for="collegeSelect">Select Application</label>
+            <select id="collegeSelect" required>
+              <option value="">-- Select College --</option>
+              <option value="101">ABC University - Computer Science</option>
+              <option value="102">XYZ College - Business Administration</option>
+              <option value="103">PQR Institute - Engineering</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="verificationNotes">Verification Notes</label>
+            <textarea
+              id="verificationNotes"
+              rows="4"
+              placeholder="Include details of site visit, document verification, faculty interviews, etc."
+              required
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="recommendation">Recommendation</label>
+            <select id="recommendation" required>
+              <option value="">-- Select Recommendation --</option>
+              <option value="approve">Approve</option>
+              <option value="reject">Reject</option>
+              <option value="resubmit">Request Resubmission</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Upload Supporting Documents</label>
+            <input
+              type="file"
+              id="supportingDocs"
+              multiple
+              accept=".pdf,.jpg,.jpeg,.png"
+            />
+            <small
+              >Upload site visit photos, signed checklists, etc. (Max 10MB
+              each)</small
+            >
+          </div>
+
+          <button type="submit" class="btn-submit">
+            <i class="fas fa-paper-plane"></i> Submit Verification
+          </button>
+        </form>
+      </section>
+
+      <!-- Profile Section -->
+      <section id="profile" class="section">
+        <h2>My Profile</h2>
+        <div class="profile-container">
+          <div class="profile-header">
+            <div class="avatar">
+              <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="profile-info">
+              <h3 id="profileName">John Doe</h3>
+              <p class="designation">Senior Appraisal Officer</p>
+              <p class="email">john.doe@academia.edu</p>
+            </div>
+          </div>
+
+          <div class="profile-details">
+            <h4>Personal Information</h4>
+            <form id="profileForm">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Full Name</label>
+                  <input type="text" value="John Doe" disabled />
+                </div>
+                <div class="form-group">
+                  <label>Email</label>
+                  <input type="email" value="john.doe@academia.edu" disabled />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Phone Number</label>
+                  <input type="tel" value="+1 234 567 8900" />
+                </div>
+                <div class="form-group">
+                  <label>Specialization</label>
+                  <select>
+                    <option>Engineering & Technology</option>
+                    <option>Business & Management</option>
+                    <option>Arts & Humanities</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Bio</label>
+                <textarea rows="3">
+Senior appraisal officer with 8 years of experience in accreditation processes.</textarea
+                >
+              </div>
+
+              <button type="submit" class="btn-update">
+                <i class="fas fa-save"></i> Update Profile
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>&copy; 2025 AcademiaAffiliation | All rights reserved.</footer>
+
+    <script>
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("You must log in first.");
+        window.location.href = "login.html";
+      }
+      function logout() {
+        localStorage.removeItem("token");
+        window.location.href = "index.html";
+      }
+      // Check authentication
+      // Section switching
+      function showSection(sectionId) {
+        document.querySelectorAll(".section").forEach((section) => {
+          section.classList.remove("active");
+        });
+        document.querySelectorAll(".nav__items a").forEach((link) => {
+          link.classList.remove("active");
+        });
+
+        document.getElementById(sectionId).classList.add("active");
+        event.currentTarget.classList.add("active");
+      }
+
+      // View application details
+      function viewApplication(appId) {
+        alert(`Viewing details for application ${appId}`);
+        // In a real app, this would open a modal or redirect to a detail page
+      }
+
+      // Form submission
+      document
+        .getElementById("verificationForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const college = document.getElementById("collegeSelect").value;
+          const notes = document.getElementById("verificationNotes").value;
+          const recommendation =
+            document.getElementById("recommendation").value;
+
+          alert(
+            `Verification submitted for ${college}\nRecommendation: ${recommendation}`
+          );
+          // In a real app, this would send data to the server
+        });
+
+      // Profile form submission
+      document
+        .getElementById("profileForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          alert("Profile updated successfully!");
+          // In a real app, this would send data to the server
+        });
+
+      // Populate officer name from localStorage or API
+      const officerName =
+        localStorage.getItem("appraiserName") || "Appraisal Officer";
+      document.getElementById("officerNameHeader").textContent = officerName;
+      document.getElementById("profileName").textContent = officerName;
+    </script>
+  </body>
 </html>
-
-
- 

@@ -2,20 +2,26 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const connectDB = require('./config/db');
-
+const path=require('path')
 const app = express();
 
-// Middleware
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:5500", // or your frontend URL
+  credentials: true
+}));
+
 app.use(express.json());
 
 
 const authRoutes = require('./routes/auth');
+const affiliationRoutes = require('./routes/affiliation');
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+const profileRoutes = require('./routes/profile'); // update path as needed
+app.use('/api', profileRoutes);
+
+// Route usage
 app.use('/api/auth', authRoutes);
-
-
-
-// Connect to DB and start server
+app.use('/api/affiliations', affiliationRoutes);
 connectDB().then(() => {
   app.listen(process.env.PORT || 5000, () => {
     console.log(`🚀 Server running on port ${process.env.PORT || 5000}`);

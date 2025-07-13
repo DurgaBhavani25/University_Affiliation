@@ -10,7 +10,7 @@
   const form = document.getElementById("loginForm");
   const loginBtn = document.getElementById("loginBtn");
 
- document.getElementById("loginForm").addEventListener("submit", async function (e) {
+document.getElementById("loginForm").addEventListener("submit", async function (e) {
   e.preventDefault();
 
   const email = document.getElementById("email").value;
@@ -22,22 +22,26 @@
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ email, password, role }) // Send the role
     });
 
     const data = await response.json();
 
     if (response.ok) {
-      document.getElementById("message").textContent = "Login successful!";
-      localStorage.setItem("token", data.token); // optional: store token
-      // Redirect based on role
-      if (data.user.role === "admin") {
-        window.location.href = "dashboard_admin.html";
-      } else if (data.user.role === "college") {
-        window.location.href = "dashboard_college.html";
-      } else if (data.user.role === "appraisal") {
-        window.location.href = "dashboard_appraisal.html";
-      }
+      // ✅ Save token before redirect
+      localStorage.setItem("token", data.token);
+      console.log("Token saved:", localStorage.getItem("token"));
+
+      // ✅ Redirect after a small delay to allow storage
+      setTimeout(() => {
+        if (data.user.role === "admin") {
+          window.location.href = "dashboard_admin.html";
+        } else if (data.user.role === "college") {
+          window.location.href = "dashboard_college.html";
+        } else if (data.user.role === "appraisal") {
+          window.location.href = "dashboard_appraisal.html";
+        }
+      }, 100); // Short delay for reliability
     } else {
       document.getElementById("message").textContent = data.message || "Login failed";
     }
@@ -46,6 +50,7 @@
     document.getElementById("message").textContent = "An error occurred";
   }
 });
+
 
   // Toggle Password Visibility
   function togglePassword() {
