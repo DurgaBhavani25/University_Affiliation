@@ -18,6 +18,8 @@ const affiliationRoutes = require('./routes/affiliation');
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const profileRoutes = require('./routes/profile'); // update path as needed
 app.use('/api', profileRoutes);
+const userRoutes = require('./routes/userRoutes');
+app.use('/api/users', userRoutes);
 
 // Route usage
 app.use('/api/auth', authRoutes);

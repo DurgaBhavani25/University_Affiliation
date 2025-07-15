@@ -4,7 +4,6 @@ const affiliationRequestSchema = new mongoose.Schema({
   submittedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
   },
   courseTitle: { type: String, required: true },
   duration: { type: String, required: true },
@@ -34,7 +33,9 @@ const affiliationRequestSchema = new mongoose.Schema({
   },
   assignedTo: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User' // appraisal officer
+    ref: 'User',
+  default: null
+ // appraisal officer
   },
   appraisalRemarks: { type: String },
   appraisalStatus: {
