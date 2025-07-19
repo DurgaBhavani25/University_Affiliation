@@ -2,18 +2,40 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>College Dashboard - Course Affiliation Requests</title>
 
+    <!-- Google Fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
       rel="stylesheet"
     />
+    
+    <!-- Font Awesome -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
     />
+    
     <style>
+      :root {
+        --primary-color: #004080;
+        --primary-dark: #002d5e;
+        --secondary-color: #eef2f7;
+        --accent-color: #ffca28;
+        --success-color: #4caf50;
+        --warning-color: #ffca28;
+        --danger-color: #dc3545;
+        --text-color: #333;
+        --text-light: #666;
+        --border-color: #ddd;
+        --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+      }
+
       * {
         box-sizing: border-box;
         margin: 0;
@@ -22,9 +44,10 @@
 
       body {
         font-family: "PT Sans", sans-serif;
-        background-color: #eef2f7;
+        background-color: var(--secondary-color);
+        color: var(--text-color);
+        line-height: 1.6;
         overflow-x: hidden;
-        color: #333;
       }
 
       /* HEADER */
@@ -35,11 +58,11 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background-color: #004080;
+        background-color: var(--primary-color);
         color: white;
         padding: 15px 30px;
         height: 70px;
-        transition: background-color 0.3s ease;
+        transition: var(--transition);
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
       }
 
@@ -56,37 +79,38 @@
       }
 
       .header-left h3 {
-        font-size: 20px;
+        font-size: 1.25rem;
         margin: 0;
         animation: slideIn 0.6s ease;
       }
 
       .header-right {
-        font-size: 16px;
+        font-size: 1rem;
         text-align: right;
         animation: fadeIn 1s ease;
       }
 
       .college-name {
         font-weight: bold;
-        color: yellow;
+        color: var(--accent-color);
       }
 
       /* LAYOUT */
       .layout {
         display: flex;
-        min-height: 100vh;
+        min-height: calc(100vh - 70px);
       }
 
       .nav__cont {
         width: 80px;
-        background: #004080;
+        background: var(--primary-color);
         height: 100vh;
         position: fixed;
         top: 70px;
         left: 0;
         transition: width 0.3s ease;
         overflow: hidden;
+        z-index: 900;
       }
 
       .nav__cont:hover {
@@ -101,13 +125,21 @@
       .nav__items {
         display: flex;
         align-items: center;
-        padding: 20px 20px;
-        transition: background-color 0.3s ease;
+        padding: 1rem 1.25rem;
+        transition: var(--transition);
+        cursor: pointer;
       }
 
       .nav__items:hover {
         background-color: rgba(255, 255, 255, 0.1);
         transform: translateX(5px);
+      }
+
+      .nav__items i {
+        color: white;
+        font-size: 1.25rem;
+        min-width: 40px;
+        text-align: center;
       }
 
       .nav__items a,
@@ -117,9 +149,9 @@
         font-size: 1rem;
         white-space: nowrap;
         opacity: 0;
-        margin: 20px;
+        margin-left: 1rem;
         transform: translateX(-10px);
-        transition: opacity 0.3s ease, transform 0.3s ease;
+        transition: var(--transition);
         background: none;
         border: none;
         cursor: pointer;
@@ -133,7 +165,7 @@
 
       main {
         margin-left: 80px;
-        padding: 30px;
+        padding: 2rem;
         flex-grow: 1;
         transition: margin-left 0.3s ease;
       }
@@ -146,9 +178,9 @@
       section {
         background: white;
         border-radius: 8px;
-        padding: 24px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        margin-bottom: 32px;
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+        margin-bottom: 2rem;
         animation: fadeIn 0.6s ease;
       }
 
@@ -164,95 +196,139 @@
       }
 
       section h2 {
-        font-size: 20px;
-        margin-bottom: 20px;
-        color: #004080;
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      section h2 i {
+        font-size: 1.25rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.25rem;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: var(--primary-dark);
       }
 
       form input,
       form select,
       form textarea {
         width: 100%;
-        padding: 10px;
-        margin-bottom: 16px;
+        padding: 0.75rem;
+        margin-bottom: 1rem;
         border-radius: 4px;
-        border: 1px solid #ccc;
-        font-size: 15px;
-        transition: border 0.3s ease;
+        border: 1px solid var(--border-color);
+        font-size: 1rem;
+        transition: var(--transition);
       }
 
       form input:focus,
       form select:focus,
       form textarea:focus {
-        border: 1px solid #004080;
+        border-color: var(--primary-color);
         outline: none;
+        box-shadow: 0 0 0 2px rgba(0, 64, 128, 0.2);
       }
 
       form button {
-        background-color: #004080;
+        background-color: var(--primary-color);
         color: white;
-        padding: 10px 20px;
+        padding: 0.75rem 1.5rem;
         border: none;
         border-radius: 5px;
-        font-size: 16px;
+        font-size: 1rem;
         cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.2s;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
       }
 
       form button:hover {
-        background-color: #002d5e;
-        transform: scale(1.05);
+        background-color: var(--primary-dark);
+        transform: translateY(-2px);
       }
 
       table {
         width: 100%;
         border-collapse: collapse;
+        margin-top: 1rem;
       }
 
       table th,
       table td {
-        padding: 12px;
-        border: 1px solid #ddd;
-        font-size: 14px;
-      }
-
-      table th {
-        background-color: #f0f0f0;
-        color: #003366;
+        padding: 0.75rem;
+        border: 1px solid var(--border-color);
         text-align: left;
       }
 
+      table th {
+        background-color: #f8f9fa;
+        color: var(--primary-dark);
+        font-weight: 600;
+      }
+
+      table tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      table tr:hover {
+        background-color: #f1f1f1;
+      }
+
       .notification {
-        padding: 16px;
+        padding: 1rem;
         border-radius: 6px;
-        margin-bottom: 12px;
-        font-size: 15px;
+        margin-bottom: 1rem;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .notification i {
+        font-size: 1.25rem;
       }
 
       .notification.yellow {
         background-color: #fff8c4;
-        border-left: 5px solid #ffca28;
+        border-left: 5px solid var(--warning-color);
       }
 
       .notification.green {
         background-color: #c8f7c5;
-        border-left: 5px solid #4caf50;
+        border-left: 5px solid var(--success-color);
       }
 
       /* Document Upload Styles */
       .file-upload {
-        margin: 20px 0;
+        margin: 1.5rem 0;
       }
 
       .file-upload-label {
         display: block;
-        margin-bottom: 8px;
-        font-weight: bold;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+      }
+
+      .file-description {
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        font-size: 0.875rem;
       }
 
       .file-input-wrapper {
         position: relative;
-        margin-bottom: 15px;
+        margin-bottom: 1rem;
       }
 
       .file-input {
@@ -265,52 +341,70 @@
       }
 
       .file-input-label {
-        display: inline-block;
-        padding: 10px 15px;
-        background-color: #f0f0f0;
-        border: 1px dashed #ccc;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.25rem;
+        background-color: #f8f9fa;
+        border: 1px dashed var(--border-color);
         border-radius: 4px;
         cursor: pointer;
-        transition: all 0.3s;
+        transition: var(--transition);
       }
 
       .file-input-label:hover {
-        background-color: #e0e0e0;
+        background-color: #e9ecef;
+        border-color: var(--primary-color);
       }
 
       .file-name {
-        margin-left: 10px;
-        font-size: 14px;
-        color: #666;
+        margin-left: 0.75rem;
+        font-size: 0.875rem;
+        color: var(--text-light);
       }
 
       .document-list {
-        margin-top: 20px;
+        margin-top: 1.5rem;
       }
 
       .document-item {
         display: flex;
         justify-content: space-between;
-        padding: 8px 0;
-        border-bottom: 1px solid #eee;
+        align-items: center;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .document-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .document-actions {
+        display: flex;
+        gap: 0.75rem;
       }
 
       .document-actions a {
-        color: #004080;
-        margin-left: 10px;
+        color: var(--primary-color);
         text-decoration: none;
+        transition: var(--transition);
       }
 
       .document-actions a:hover {
-        text-decoration: underline;
+        color: var(--primary-dark);
       }
 
       /* Status badges */
       .status-badge {
-        padding: 4px 8px;
+        padding: 0.375rem 0.75rem;
         border-radius: 12px;
-        font-size: 12px;
-        font-weight: bold;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
       }
 
       .status-pending {
@@ -332,20 +426,19 @@
         background-color: #cce5ff;
         color: #004085;
       }
+
       .status-submitted {
-        background-color: #cce5ff;
-        color: #37fb99;
+        background-color: #e2f3ff;
+        color: #0062a3;
       }
 
       /* FOOTER */
       footer {
-        background-color: #004080;
+        background-color: var(--primary-color);
         color: white;
         text-align: center;
-        padding: 16px;
-        font-size: 14px;
-        margin-top: 30px;
-        transition: background-color 0.3s ease;
+        padding: 1.5rem;
+        font-size: 0.875rem;
       }
 
       /* MODAL STYLES */
@@ -369,7 +462,7 @@
         max-width: 700px;
         max-height: 80vh;
         overflow-y: auto;
-        padding: 25px;
+        padding: 1.5rem;
         position: relative;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         animation: modalFadeIn 0.3s ease-out;
@@ -390,15 +483,18 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 20px;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #eee;
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--border-color);
       }
 
       .modal-title {
         font-size: 1.5rem;
-        color: #004080;
+        color: var(--primary-color);
         margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
       }
 
       .close-btn {
@@ -406,103 +502,90 @@
         font-weight: bold;
         color: #aaa;
         cursor: pointer;
-        transition: color 0.2s;
+        transition: var(--transition);
         background: none;
         border: none;
-        padding: 0 10px;
+        padding: 0 0.5rem;
       }
 
       .close-btn:hover {
-        color: #333;
+        color: var(--text-color);
       }
 
       .modal-body {
-        margin-bottom: 20px;
+        margin-bottom: 1.25rem;
       }
 
       .modal-footer {
         display: flex;
         justify-content: flex-end;
-        gap: 10px;
-        padding-top: 15px;
-        border-top: 1px solid #eee;
+        gap: 0.75rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border-color);
       }
 
       .modal-btn {
-        padding: 8px 16px;
+        padding: 0.5rem 1rem;
         border-radius: 4px;
-        font-size: 14px;
+        font-size: 0.875rem;
         cursor: pointer;
-        transition: all 0.2s;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
       }
 
       .modal-btn-primary {
-        background-color: #004080;
+        background-color: var(--primary-color);
         color: white;
         border: none;
       }
 
       .modal-btn-primary:hover {
-        background-color: #002d5e;
+        background-color: var(--primary-dark);
       }
 
       .modal-btn-secondary {
-        background-color: #f0f0f0;
-        color: #333;
-        border: 1px solid #ccc;
+        background-color: #f8f9fa;
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
       }
 
       .modal-btn-secondary:hover {
-        background-color: #e0e0e0;
+        background-color: #e9ecef;
       }
 
       .document-list-modal {
-        margin-top: 15px;
+        margin-top: 1rem;
       }
 
       .document-list-modal a {
-        color: #004080;
+        color: var(--primary-color);
         text-decoration: none;
         display: block;
-        margin-bottom: 8px;
+        margin-bottom: 0.5rem;
+        transition: var(--transition);
       }
 
       .document-list-modal a:hover {
         text-decoration: underline;
+        color: var(--primary-dark);
       }
 
       /* Application status styles */
       .status-section {
-        margin-bottom: 15px;
-        padding: 10px;
+        margin-bottom: 1rem;
+        padding: 0.75rem;
         border-radius: 5px;
+        background-color: #f8f9fa;
       }
 
       .status-section h4 {
-        margin-bottom: 10px;
-        color: #004080;
-      }
-
-      /* MEDIA QUERIES */
-      @media (max-width: 768px) {
-        .nav__cont {
-          position: relative;
-          width: 100%;
-          height: auto;
-        }
-
-        main {
-          margin-left: 0;
-        }
-
-        footer {
-          position: relative;
-        }
-
-        .modal-content {
-          width: 95%;
-          padding: 15px;
-        }
+        margin-bottom: 0.75rem;
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
       }
 
       /* Loading spinner */
@@ -525,50 +608,160 @@
       /* Filter and sort controls */
       .table-controls {
         display: flex;
-        gap: 15px;
-        margin-bottom: 15px;
+        gap: 1rem;
+        margin-bottom: 1rem;
         flex-wrap: wrap;
       }
 
       .table-controls label {
         display: flex;
         align-items: center;
-        gap: 5px;
-        font-weight: bold;
+        gap: 0.5rem;
+        font-weight: 600;
       }
 
       .table-controls select {
-        padding: 8px;
+        padding: 0.5rem;
         border-radius: 4px;
-        border: 1px solid #ccc;
+        border: 1px solid var(--border-color);
+        transition: var(--transition);
+      }
+
+      .table-controls select:focus {
+        border-color: var(--primary-color);
+        outline: none;
       }
 
       /* Action buttons */
       .action-btn {
-        padding: 6px 12px;
+        padding: 0.375rem 0.75rem;
         border-radius: 4px;
-        font-size: 13px;
+        font-size: 0.8125rem;
         cursor: pointer;
-        transition: all 0.2s;
+        transition: var(--transition);
         border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
       }
 
       .view-btn {
-        background-color: #004080;
+        background-color: var(--primary-color);
         color: white;
       }
 
       .view-btn:hover {
-        background-color: #002d5e;
+        background-color: var(--primary-dark);
       }
 
       .delete-btn {
-        background-color: #dc3545;
+        background-color: var(--danger-color);
         color: white;
       }
 
       .delete-btn:hover {
         background-color: #bb2d3b;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 992px) {
+        main {
+          padding: 1.5rem;
+        }
+        
+        .modal-content {
+          width: 90%;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .main-header {
+          padding: 15px;
+          flex-direction: column;
+          height: auto;
+          gap: 0.5rem;
+        }
+        
+        .header-left, .header-right {
+          width: 100%;
+          justify-content: center;
+          text-align: center;
+        }
+        
+        .nav__cont {
+          position: relative;
+          width: 100%;
+          height: auto;
+          top: 0;
+        }
+        
+        .nav {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          padding: 0.5rem;
+        }
+        
+        .nav__items {
+          padding: 0.75rem;
+        }
+        
+        .nav__items a,
+        .nav__items button {
+          opacity: 1;
+          transform: translateX(0);
+          margin: 0;
+        }
+        
+        .nav__cont:hover {
+          width: 100%;
+        }
+        
+        main {
+          margin-left: 0;
+          padding: 1rem;
+        }
+        
+        .nav__cont:hover ~ main {
+          margin-left: 0;
+        }
+        
+        section {
+          padding: 1.25rem;
+        }
+        
+        .table-controls {
+          flex-direction: column;
+          gap: 0.75rem;
+        }
+        
+        table {
+          display: block;
+          overflow-x: auto;
+          white-space: nowrap;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .modal-content {
+          width: 95%;
+          padding: 1rem;
+        }
+        
+        .modal-footer {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        
+        .modal-btn {
+          width: 100%;
+          justify-content: center;
+        }
+        
+        form button {
+          width: 100%;
+          justify-content: center;
+        }
       }
     </style>
   </head>
@@ -577,7 +770,7 @@
     <header class="main-header">
       <div class="header-left">
         <img src="logo.jpg" alt="Logo" class="logo" />
-        <h3>AcademiaAffiliation</h3>
+        <h3><i class="fas fa-graduation-cap"></i> AcademiaAffiliation</h3>
       </div>
       <div class="header-right">
         <span>Welcome, </span>
@@ -589,15 +782,23 @@
     <nav class="nav__cont">
       <ul class="nav">
         <li class="nav__items">
+          <i class="fas fa-tachometer-alt"></i>
           <a href="#dashboard">Dashboard</a>
         </li>
         <li class="nav__items">
+          <i class="fas fa-file-alt"></i>
           <a href="#form">New Application</a>
         </li>
         <li class="nav__items">
+          <i class="fas fa-clipboard-list"></i>
           <a href="#track">Application Status</a>
         </li>
         <li class="nav__items">
+          <i class="fas fa-bell"></i>
+          <a href="#notify">Notifications</a>
+        </li>
+        <li class="nav__items">
+          <i class="fas fa-sign-out-alt"></i>
           <button id="logoutBtn" onclick="logout()">Logout</button>
         </li>
       </ul>
@@ -605,31 +806,37 @@
 
     <!-- Main Content -->
     <main>
-      <!-- Side Nav -->
-
       <!-- Dashboard Section -->
-      <div id="dashboard">
-        <h2>College Details</h2>
+      <section id="dashboard">
+        <h2><i class="fas fa-university"></i> College Details</h2>
         <form id="collegeForm">
-          <label>College Name</label>
-          <input type="text" id="collegeName1" required />
+          <div class="form-group">
+            <label for="collegeName1">College Name</label>
+            <input type="text" id="collegeName1" required />
+          </div>
 
-          <label>Address</label>
-          <input type="text" id="address" required />
+          <div class="form-group">
+            <label for="address">Address</label>
+            <input type="text" id="address" required />
+          </div>
 
-          <label>Contact Person</label>
-          <input type="text" id="contactPerson" required />
+          <div class="form-group">
+            <label for="contactPerson">Contact Person</label>
+            <input type="text" id="contactPerson" required />
+          </div>
 
-          <label>Contact Number</label>
-          <input type="text" id="contactNumber" required />
+          <div class="form-group">
+            <label for="contactNumber">Contact Number</label>
+            <input type="text" id="contactNumber" required />
+          </div>
 
-          <button type="submit">Update</button>
+          <button type="submit"><i class="fas fa-save"></i> Update</button>
           <p id="updateMessage"></p>
         </form>
-      </div>
+      </section>
 
       <section id="form">
-        <h2>Submit Course Affiliation Request</h2>
+        <h2><i class="fas fa-paper-plane"></i> Submit Course Affiliation Request</h2>
         <form id="affiliationForm" enctype="multipart/form-data">
           <input type="hidden" id="collegeId" name="collegeId" />
 
@@ -740,16 +947,19 @@
             </div>
           </div>
 
-          <button type="submit" id="submitBtn">Submit Request</button>
+          <button type="submit" id="submitBtn">
+            <i class="fas fa-paper-plane"></i> Submit Request
+          </button>
         </form>
       </section>
 
       <section id="track">
-        <h2>Track Your Applications</h2>
+        <h2><i class="fas fa-clipboard-check"></i> Track Your Applications</h2>
 
         <div class="table-controls">
-          <label for="statusFilter"
-            >Filter by Status:
+          <label for="statusFilter">
+            <i class="fas fa-filter"></i>
+            Filter by Status:
             <select id="statusFilter">
               <option value="all">All</option>
               <option value="pending">Pending</option>
@@ -760,8 +970,9 @@
             </select>
           </label>
 
-          <label for="sortOrder"
-            >Sort by Date:
+          <label for="sortOrder">
+            <i class="fas fa-sort"></i>
+            Sort by Date:
             <select id="sortOrder">
               <option value="desc">Newest First</option>
               <option value="asc">Oldest First</option>
@@ -781,7 +992,7 @@
             </tr>
           </thead>
           <tbody id="applicationsTableBody">
-            <!-- JS will populate -->
+            <!-- JS will populate from college.js -->
           </tbody>
         </table>
       </section>
@@ -790,22 +1001,22 @@
       <div id="viewModal" class="modal">
         <div class="modal-content">
           <div class="modal-header">
-            <h3 class="modal-title">Application Details</h3>
+            <h3 class="modal-title"><i class="fas fa-file-alt"></i> Application Details</h3>
             <button class="close-btn" onclick="closeModal()">&times;</button>
           </div>
           <div class="modal-body" id="modalDetails">
-            <!-- Application details will be inserted here -->
+            <!-- Application details will be inserted here from college.js -->
           </div>
           <div class="modal-footer" id="modalActions">
-            <!-- Action buttons will be inserted here -->
+            <!-- Action buttons will be inserted here from college.js -->
           </div>
         </div>
       </div>
 
       <section id="notify">
-        <h2>Notifications</h2>
+        <h2><i class="fas fa-bell"></i> Notifications</h2>
         <div id="notificationsContainer">
-          <!-- Dynamic notifications will appear here -->
+          <!-- Dynamic notifications will appear here from college.js -->
         </div>
       </section>
     </main>
@@ -815,5 +1026,22 @@
     </footer>
 
     <script src="college.js"></script>
+    <script>
+      // Basic functionality that won't interfere with college.js
+      document.getElementById('documentUpload').addEventListener('change', function(e) {
+        const files = e.target.files;
+        const fileNames = document.getElementById('fileNames');
+        
+        if(files.length > 0) {
+          fileNames.textContent = files.length + ' file(s) selected';
+        } else {
+          fileNames.textContent = 'No files selected';
+        }
+      });
+      
+      // Set college name (sample - will be overridden by college.js)
+      document.getElementById('collegeName').textContent = 'Loading...';
+      document.getElementById('collegeName1').value = 'Loading...';
+    </script>
   </body>
 </html>

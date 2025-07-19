@@ -77,7 +77,7 @@ router.get(
     try {
       console.log("Admin Authenticated:", req.user);
 
-      const { status, affiliationType, page = 1, limit = 10 } = req.query;
+      const { status, affiliationType, page = 1, limit = 40 } = req.query;
       const filter = {};
       if (status) filter.status = status;
       if (affiliationType) filter.affiliationType = affiliationType;

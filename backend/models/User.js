@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
     address: String,
     contactPerson: String,
     contactNumber: String,
+    
   },
 
   appraisalDetails: {
@@ -19,7 +20,9 @@ const userSchema = new mongoose.Schema({
     designation: String,
     department: String,
     contactNumber: String,
-    region: String
+    region: String,
+    experience: Number,
+  bio: String 
   }
 });
 

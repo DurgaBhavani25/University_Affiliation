@@ -34,6 +34,71 @@ document.addEventListener("DOMContentLoaded", function () {
   initDashboard();
 });
 
+document
+  .getElementById("collegeForm")
+  .addEventListener("submit", async function (e) {
+    e.preventDefault(); // Prevent page reload
+
+    const collegeName = document.getElementById("collegeName1").value.trim();
+    const address = document.getElementById("address").value.trim();
+    const contactPerson = document.getElementById("contactPerson").value.trim();
+    const contactNumber = document.getElementById("contactNumber").value.trim();
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("User not authenticated");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5000/api/profile/update", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          collegeName,
+          address,
+          contactPerson,
+          contactNumber,
+        }),
+      });
+
+      let data;
+      const contentType = response.headers.get("content-type");
+
+      if (contentType && contentType.includes("application/json")) {
+        data = await response.json();
+      } else {
+        const text = await response.text(); // Read raw response to help debugging
+        console.error("Non-JSON response:", text);
+        throw new Error("Expected JSON response but got something else.");
+      }
+
+      const messageEl = document.getElementById("updateMessage");
+
+      if (response.ok) {
+        initDashboard();
+        messageEl.style.color = "green";
+        messageEl.textContent = data.message || "Update successful!";
+        document.getElementById("collegeName1").textContent = collegeName;
+        document.getElementById("collegeName").textContent = collegeName;
+        document.getElementById("address").textContent = address;
+        document.getElementById("contactPerson").textContent = contactPerson;
+        document.getElementById("contactNumber").textContent = contactNumber;
+      } else {
+        messageEl.style.color = "red";
+        messageEl.textContent = data.message || "Update failed!";
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      document.getElementById("updateMessage").textContent =
+        "Something went wrong.";
+    }
+  });
+
 function logout() {
   localStorage.removeItem("token");
   window.location.href = "index.html";
@@ -302,7 +367,7 @@ function viewApplication(appId) {
                 <p><strong>Intake Capacity:</strong> ${
                   application.intakeCapacity
                 }</p>
-                <p><strong>Course Fee:</strong> ₹${application.courseFee}</p>
+                <p><strong>Course Fee:</strong> ${application.courseFee}</p>
                 <p><strong>Affiliation Type:</strong> ${
                   application.affiliationType
                 }</p>

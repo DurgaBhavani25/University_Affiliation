@@ -20,6 +20,13 @@ const profileRoutes = require('./routes/profile'); // update path as needed
 app.use('/api', profileRoutes);
 const userRoutes = require('./routes/userRoutes');
 app.use('/api/users', userRoutes);
+const adminRoutes = require('./routes/admin'); // adjust path as needed
+
+app.use('/admin', adminRoutes);
+const appraisalRoutes = require('./routes/appraisal');
+
+// Use it with a base path (e.g., /appraisal)
+app.use('/appraisal', appraisalRoutes);
 
 // Route usage
 app.use('/api/auth', authRoutes);
