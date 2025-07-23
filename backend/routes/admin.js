@@ -24,46 +24,54 @@ router.get('/appraisals', async (req, res) => {
   }
 });
 router.post("/decision/:id", async (req, res) => {
-  const { id } = req.params;
-  const { decision } = req.body; // 'approved', 'rejected', or 'resubmit'
+ const { id } = req.params;
+const { decision } = req.body; // 'approved', 'rejected', or 'resubmit'
 
-  // Validate decision input
-  if (!["approved", "rejected", "resubmit"].includes(decision)) {
-    return res.status(400).json({
+// Validate input
+if (!["approved", "rejected", "resubmit"].includes(decision)) {
+  return res.status(400).json({
+    success: false,
+    message: "Invalid decision. Must be 'approved', 'rejected', or 'resubmit'.",
+  });
+}
+
+try {
+  const application = await AffiliationRequest.findById(id);
+
+  if (!application) {
+    return res.status(404).json({
       success: false,
-      message: "Invalid decision. Must be 'approved', 'rejected', or 'resubmit'.",
+      message: "Application not found.",
     });
   }
 
-  try {
-    const application = await AffiliationRequest.findById(id);
+  // Save admin's decision
+  application.adminDecision = decision;
+  application.finalDecisionDate = new Date();
 
-    if (!application) {
-      return res.status(404).json({
-        success: false,
-        message: "Application not found.",
-      });
-    }
-
-    application.adminDecision = decision;
-    application.status = decision; // optionally update main status
-    application.finalDecisionDate = new Date();
-
-    await application.save();
-
-    return res.status(200).json({
-      success: true,
-      message: `Application ${decision} successfully.`,
-    });
-  } catch (err) {
-    console.error("Error updating decision:", err);
-    return res.status(500).json({
-      success: false,
-      message: "Internal server error.",
-    });
+  // Reset application status if resubmission is needed
+  if (decision === "resubmit") {
+    
+    application.appraisalStatus = "not_verified";
+  } else {
+    // Otherwise set status same as decision
+    application.status = decision; // "approved" or "rejected"
   }
+
+  await application.save();
+
+  return res.status(200).json({
+    success: true,
+    message: `Application ${decision} successfully.`,
+  });
+} catch (err) {
+  console.error("Error updating decision:", err);
+  return res.status(500).json({
+    success: false,
+    message: "Internal server error.",
+  });
+}
 });
-
 module.exports = router;
 
 

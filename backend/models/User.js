@@ -12,7 +12,6 @@ const userSchema = new mongoose.Schema({
     address: String,
     contactPerson: String,
     contactNumber: String,
-    
   },
 
   appraisalDetails: {

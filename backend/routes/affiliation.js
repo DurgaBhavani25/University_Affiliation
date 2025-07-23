@@ -322,5 +322,63 @@ router.delete(
     }
   }
 );
+router.put("/:id", verifyToken, async (req, res) => {
+  const { id } = req.params;
+  const userId = req.user.id; // ✅ Moved this before console.log
+
+  console.log("Received PUT /:id");
+  console.log("Request Body:", req.body);
+  console.log("User ID:", userId);
+
+  const {
+    courseTitle,
+    duration,
+    intakeCapacity,
+    courseFee,
+    infrastructureDetails,
+    affiliationType,
+    facultyInfo,
+  } = req.body;
+
+  try {
+    const application = await AffiliationRequest.findById(id);
+
+    if (!application) {
+      return res.status(404).json({ success: false, message: "Application not found." });
+    }
+
+    if (application.submittedBy.toString() !== userId) {
+      return res.status(403).json({ success: false, message: "Not authorized." });
+    }
+
+    if (application.adminDecision !== "resubmit") {
+      return res.status(400).json({ success: false, message: "This application cannot be edited now." });
+    }
+
+    // Update fields
+    application.courseTitle = courseTitle;
+    application.duration = duration;
+    application.intakeCapacity = intakeCapacity;
+    application.courseFee = courseFee;
+    application.infrastructureDetails = infrastructureDetails;
+    application.affiliationType = affiliationType;
+    application.facultyInfo = facultyInfo;
+
+    // Reset statuses
+    application.status = "resubmitted";
+    application.adminDecision = "pending";
+    application.appraisalStatus = "not_verified";
+    application.finalDecisionDate = null;
+    application.updatedAt = new Date();
+
+    await application.save();
+
+    return res.status(200).json({ success: true, message: "Application resubmitted successfully." });
+  } catch (err) {
+    console.error("Error updating application:", err);
+    return res.status(500).json({ success: false, message: "Internal server error." });
+  }
+});
+
 
 module.exports = router;

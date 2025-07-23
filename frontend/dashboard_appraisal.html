@@ -1149,9 +1149,9 @@
               },
             }
           );
-          
+
           const result = await response.json();
-          allAssignedApplications=result.data;
+          allAssignedApplications = result.data;
           tbody.innerHTML = ""; // Clear loading message
 
           if (result.success) {
@@ -1189,38 +1189,43 @@
           tbody.innerHTML = '<tr><td colspan="7">Error loading data</td></tr>';
         }
       }
-      document.getElementById("searchInput").addEventListener("input", filterApplications);
+      document
+        .getElementById("searchInput")
+        .addEventListener("input", filterApplications);
 
       function filterApplications() {
-  const searchTerm = document.getElementById("searchInput").value.toLowerCase();
-  const tbody = document.getElementById("assignedAppsBody");
-const filtered = allAssignedApplications.filter((app) => {
-  const collegeName = app.submittedBy?.collegeDetails?.collegeName?.toLowerCase() || "";
+        const searchTerm = document
+          .getElementById("searchInput")
+          .value.toLowerCase();
+        const tbody = document.getElementById("assignedAppsBody");
+        const filtered = allAssignedApplications.filter((app) => {
+          const collegeName =
+            app.submittedBy?.collegeDetails?.collegeName?.toLowerCase() || "";
 
-    const courseTitle = app.courseTitle?.toLowerCase() || "";
-    const affiliationType = app.affiliationType?.toLowerCase() || "";
-    const status = app.status?.toLowerCase() || "";
-    const last4Id = app._id.slice(-4);
+          const courseTitle = app.courseTitle?.toLowerCase() || "";
+          const affiliationType = app.affiliationType?.toLowerCase() || "";
+          const status = app.status?.toLowerCase() || "";
+          const last4Id = app._id.slice(-4);
 
-    return (
-      collegeName.includes(searchTerm) ||
-      courseTitle.includes(searchTerm) ||
-      affiliationType.includes(searchTerm) ||
-      status.includes(searchTerm) ||
-      last4Id.includes(searchTerm)
-    );
-  });
+          return (
+            collegeName.includes(searchTerm) ||
+            courseTitle.includes(searchTerm) ||
+            affiliationType.includes(searchTerm) ||
+            status.includes(searchTerm) ||
+            last4Id.includes(searchTerm)
+          );
+        });
 
-  // Update table
-  tbody.innerHTML = "";
+        // Update table
+        tbody.innerHTML = "";
 
-  if (filtered.length === 0) {
-    tbody.innerHTML =
-      '<tr><td colspan="7">No applications match your search.</td></tr>';
-  } else {
-    filtered.forEach((app) => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
+        if (filtered.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="7">No applications match your search.</td></tr>';
+        } else {
+          filtered.forEach((app) => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
         <td>${app._id.slice(-4)}</td>
         <td>${app.submittedBy?.collegeDetails?.collegeName || "N/A"}</td>
         <td>${app.courseTitle}</td>
@@ -1232,12 +1237,14 @@ const filtered = allAssignedApplications.filter((app) => {
             : "N/A"
         }</td>
         <td>
-          <button class="btn btn-view btn-sm" onclick="viewApplication('${app._id}')">View</button>
+          <button class="btn btn-view btn-sm" onclick="viewApplication('${
+            app._id
+          }')">View</button>
         </td>`;
-      tbody.appendChild(tr);
-    });
-  }
-}
+            tbody.appendChild(tr);
+          });
+        }
+      }
 
       function updatePaginationControls(currentPage, totalPages) {
         const prevBtn = document.getElementById("prevPageBtn");

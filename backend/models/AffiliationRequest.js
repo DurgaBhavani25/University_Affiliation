@@ -26,10 +26,11 @@ const affiliationRequestSchema = new mongoose.Schema({
     },
   ],
   status: {
-    type: String,
-    enum: ["pending", "assigned", "under_review", "approved", "rejected","resubmit"],
-    default: "pending",
-  },
+  type: String,
+  enum: ["pending", "assigned", "under_review", "approved", "rejected", "resubmitted"], // ✅ changed 'resubmit' to 'resubmitted'
+  default: "pending",
+},
+
   assignedTo: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -54,10 +55,12 @@ const affiliationRequestSchema = new mongoose.Schema({
     },
   ],
    adminDecision: {
-    type: String,
-    enum: ["approved", "rejected", "resubmit"],
-    default: null,
-  },
+  type: String,
+  enum: ["approved", "rejected", "resubmit", "pending"], // ✅ added 'pending'
+  default: null,
+},
+
+
   finalDecisionDate: Date,
   createdAt: { type: Date, default: Date.now },
 });

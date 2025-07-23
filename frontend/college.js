@@ -110,12 +110,55 @@ function initDashboard() {
   if (collegeName) {
     document.getElementById("collegeName").textContent = collegeName;
   }
+document.getElementById("affiliationForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const appId = document.getElementById("collegeId").value; // hidden field
+  const isEdit = !!appId; // if appId exists, it's a resubmission
+
+  const data = {
+    courseTitle: document.getElementById("courseName").value,
+    duration: document.getElementById("courseDuration").value,
+    intakeCapacity: parseInt(document.getElementById("intake").value),
+    courseFee: parseFloat(document.getElementById("courseFee").value),
+    infrastructureDetails: document.getElementById("infrastructure").value,
+    affiliationType: document.getElementById("affiliationType").value,
+    facultyInfo: {
+      name: document.getElementById("facultyName").value,
+      qualification: document.getElementById("facultyQualification").value,
+    },
+  };
+
+  const method = isEdit ? "PUT" : "POST";
+  const url = isEdit
+    ? `http://localhost:5000/api/affiliations/${appId}`
+    : "http://localhost:5000/api/affiliations";
+
+  fetch(url, {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+    body: JSON.stringify(data),
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error("Failed to submit/resubmit application");
+      return res.json();
+    })
+    .then(() => {
+      alert(isEdit ? "Application resubmitted successfully!" : "Application submitted!");
+      document.getElementById("collegeForm").reset();
+      // refresh dashboard
+    })
+    .catch((err) => {
+      console.error("Submission error:", err);
+      alert("An error occurred while submitting.");
+    });
+});
 
   // Set up form submission
-  document
-    .getElementById("affiliationForm")
-    .addEventListener("submit", handleFormSubmit);
-
+  
   // Set up file upload display
   document
     .getElementById("documentUpload")
@@ -145,71 +188,7 @@ function initDashboard() {
   loadApplications();
 }
 
-async function handleFormSubmit(e) {
-  e.preventDefault();
 
-  const token = localStorage.getItem("token");
-  if (!token) {
-    alert("Please log in first.");
-    return;
-  }
-
-  const form = e.target;
-  const submitBtn = document.getElementById("submitBtn");
-  const originalBtnText = submitBtn.innerHTML;
-
-  // Show loading state
-  submitBtn.disabled = true;
-  submitBtn.innerHTML = '<span class="spinner"></span> Submitting...';
-
-  try {
-    const formData = new FormData();
-    formData.append("courseTitle", form.courseName.value);
-    formData.append("duration", form.courseDuration.value);
-    formData.append("intakeCapacity", form.intake.value);
-    formData.append("infrastructureDetails", form.infrastructure.value);
-    const facultyInfo = {
-      name: form.facultyName.value,
-      qualification: form.facultyQualification.value,
-    };
-    formData.append("facultyInfo", JSON.stringify(facultyInfo));
-
-    formData.append("courseFee", form.courseFee.value);
-    formData.append("affiliationType", form.affiliationType.value);
-
-    // Add files
-    const files = document.getElementById("documentUpload").files;
-    for (let i = 0; i < files.length; i++) {
-      formData.append("supportingDocuments", files[i]);
-    }
-
-    const response = await fetch("http://localhost:5000/api/affiliations", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    });
-
-    const result = await response.json();
-
-    if (response.ok) {
-      alert("✅ Application Submitted Successfully!");
-      form.reset();
-      document.getElementById("fileNames").textContent = "No files selected";
-      document.getElementById("documentList").innerHTML = "";
-      loadApplications(); // Refresh the applications table
-    } else {
-      throw new Error(result.message || "Submission failed");
-    }
-  } catch (err) {
-    console.error("Submission error:", err);
-    alert(`❌ Error: ${err.message}`);
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = originalBtnText;
-  }
-}
 
 async function loadApplications() {
   const token = localStorage.getItem("token");
@@ -435,13 +414,20 @@ function viewApplication(appId) {
       let actionsHtml = "";
       if (application.status === "pending") {
         actionsHtml = `
-                <button class="modal-btn modal-btn-secondary" onclick="closeModal()">Close</button>
-                <button class="modal-btn modal-btn-primary" onclick="deleteApplication('${application._id}', true)">Delete Application</button>
-              `;
+    <button class="modal-btn modal-btn-secondary" onclick="closeModal()">Close</button>
+    <button class="modal-btn modal-btn-primary" onclick="deleteApplication('${application._id}', true)">Delete Application</button>
+  `;
+      } if (application.adminDecision === "resubmit") {
+        actionsHtml = `
+    <button class="modal-btn modal-btn-secondary" onclick="closeModal()">Close</button>
+    <button class="modal-btn modal-btn-warning" onclick="populateResubmissionForm('${application._id}')">
+      <i class="fas fa-edit"></i> Edit & Resubmit
+    </button>
+  `;
       } else {
         actionsHtml = `
-                <button class="modal-btn modal-btn-primary" onclick="closeModal()">Close</button>
-              `;
+    <button class="modal-btn modal-btn-primary" onclick="closeModal()">Close</button>
+  `;
       }
 
       document.getElementById("modalActions").innerHTML = actionsHtml;
@@ -454,6 +440,31 @@ function viewApplication(appId) {
       alert("Failed to load application details. Please try again.");
     });
 }
+function populateResubmissionForm(appId) {
+  closeModal(); // Hide modal
+
+  fetch(`http://localhost:5000/api/affiliations/${appId}`, {
+    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+  })
+    .then((res) => res.json())
+    .then((app) => {
+      document.getElementById("courseName").value = app.courseTitle;
+      document.getElementById("courseDuration").value = app.duration;
+      document.getElementById("intake").value = app.intakeCapacity;
+      document.getElementById("facultyName").value = app.facultyInfo?.name || "";
+      document.getElementById("facultyQualification").value = app.facultyInfo?.qualification || "";
+      document.getElementById("infrastructure").value = app.infrastructureDetails;
+      document.getElementById("courseFee").value = app.courseFee;
+      document.getElementById("affiliationType").value = app.affiliationType;
+      document.getElementById("collegeId").value = app._id; // store ID for PUT
+      document.getElementById("form").scrollIntoView({ behavior: "smooth" }); // scroll to form
+    })
+    .catch((err) => {
+      console.error("Error populating form:", err);
+      alert("Failed to load application for resubmission.");
+    });
+}
+
 
 function closeModal() {
   document.getElementById("viewModal").style.display = "none";
