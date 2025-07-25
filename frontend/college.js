@@ -113,34 +113,50 @@ function initDashboard() {
 document.getElementById("affiliationForm").addEventListener("submit", function (e) {
   e.preventDefault();
 
-  const appId = document.getElementById("collegeId").value; // hidden field
-  const isEdit = !!appId; // if appId exists, it's a resubmission
+  const appId = document.getElementById("collegeId").value;
+  const isEdit = !!appId;
 
-  const data = {
-    courseTitle: document.getElementById("courseName").value,
-    duration: document.getElementById("courseDuration").value,
-    intakeCapacity: parseInt(document.getElementById("intake").value),
-    courseFee: parseFloat(document.getElementById("courseFee").value),
-    infrastructureDetails: document.getElementById("infrastructure").value,
-    affiliationType: document.getElementById("affiliationType").value,
-    facultyInfo: {
-      name: document.getElementById("facultyName").value,
-      qualification: document.getElementById("facultyQualification").value,
-    },
+  const formData = new FormData();
+
+  // Append basic fields
+  formData.append("courseTitle", document.getElementById("courseName").value);
+  formData.append("duration", document.getElementById("courseDuration").value);
+  formData.append("intakeCapacity", document.getElementById("intake").value);
+  formData.append("courseFee", document.getElementById("courseFee").value);
+  formData.append("infrastructureDetails", document.getElementById("infrastructure").value);
+  formData.append("affiliationType", document.getElementById("affiliationType").value);
+
+  // Append facultyInfo as stringified JSON
+  const faculty = {
+    name: document.getElementById("facultyName").value,
+    qualification: document.getElementById("facultyQualification").value,
   };
+  formData.append("facultyInfo", JSON.stringify(faculty));
+
+  // Append files
+  const fileInput = document.getElementById("documentUpload");
+if (!fileInput) {
+  console.error("❌ File input not found.");
+  return;
+}
+const files = fileInput.files;
+for (let i = 0; i < files.length; i++) {
+  formData.append("supportingDocuments", files[i]); // 'supportingDocuments' is the name field
+}
+
 
   const method = isEdit ? "PUT" : "POST";
   const url = isEdit
     ? `http://localhost:5000/api/affiliations/${appId}`
-    : "http://localhost:5000/api/affiliations";
+    : `http://localhost:5000/api/affiliations`;
 
   fetch(url, {
     method,
     headers: {
-      "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("token")}`,
+      // ⛔️ Don't set Content-Type manually when using FormData
     },
-    body: JSON.stringify(data),
+    body: formData,
   })
     .then((res) => {
       if (!res.ok) throw new Error("Failed to submit/resubmit application");
@@ -148,18 +164,15 @@ document.getElementById("affiliationForm").addEventListener("submit", function (
     })
     .then(() => {
       alert(isEdit ? "Application resubmitted successfully!" : "Application submitted!");
-      document.getElementById("collegeForm").reset();
-      // refresh dashboard
+      document.getElementById("affiliationForm").reset();
+      // Optionally refresh dashboard
+      loadApplications();
     })
     .catch((err) => {
       console.error("Submission error:", err);
       alert("An error occurred while submitting.");
     });
 });
-
-  // Set up form submission
-  
-  // Set up file upload display
   document
     .getElementById("documentUpload")
     .addEventListener("change", function () {

@@ -74,7 +74,7 @@
         height: 40px;
         width: 40px;
         object-fit: contain;
-        filter: brightness(0) invert(1);
+        
       }
 
       .header-left h3 {
@@ -783,7 +783,7 @@
   <body>
     <header class="main-header">
       <div class="header-left">
-        <img src="logo.jpg" alt="Logo" class="logo" />
+        <img src="logo" alt="Logo" class="logo" />
         <h3>AcademiaAffiliation</h3>
       </div>
       <div class="header-right">
@@ -819,9 +819,6 @@
         <section id="profile" class="section">
           <div class="section-header">
             <h2>My Profile</h2>
-            <button class="btn btn-view">
-              <i class="fas fa-edit"></i> Edit Profile
-            </button>
           </div>
 
           <div class="profile-container">
@@ -952,20 +949,6 @@
         <section id="dashboard-stats" class="section">
           <div class="section-header">
             <h2>Appraisal Overview</h2>
-            <div class="d-flex align-items-center">
-              <select
-                class="form-control"
-                style="width: auto; margin-right: 10px"
-              >
-                <option>This Month</option>
-                <option>Last Month</option>
-                <option>This Quarter</option>
-                <option>This Year</option>
-              </select>
-              <button class="btn btn-view btn-sm">
-                <i class="fas fa-sync-alt"></i> Refresh
-              </button>
-            </div>
           </div>
 
           <div class="stats-container">
@@ -1054,9 +1037,6 @@
       }
       let allAssignedApplications = []; // Global array to hold fetched applications
 
-      let currentPage = 1; // default page
-      const itemsPerPage = 4;
-
       async function loadAppraisalStats() {
         const token = localStorage.getItem("token");
         try {
@@ -1118,7 +1098,8 @@
           }
         });
       }
-
+      let currentPage = 1; // default page
+      const itemsPerPage = 4;
       document.addEventListener("DOMContentLoaded", function () {
         fetchAssignedApplications(); // defaults to page 1
 
@@ -1135,6 +1116,7 @@
       });
 
       async function fetchAssignedApplications(page = 1) {
+        currentPage = page;
         const token = localStorage.getItem("token"); // Get JWT token
         const tbody = document.getElementById("assignedAppsBody");
         tbody.innerHTML = '<tr><td colspan="7">Loading...</td></tr>';
@@ -1156,6 +1138,9 @@
 
           if (result.success) {
             const applications = result.data;
+            const totalPages = result.totalPages || 1; // ✅ Extract totalPages from server
+            currentPage = result.page || page; // ✅ Ensure currentPage is in sync
+
             if (applications.length === 0) {
               tbody.innerHTML =
                 '<tr><td colspan="7">No assigned applications found.</td></tr>';
@@ -1169,10 +1154,11 @@
               <td>${app.affiliationType}</td>
               <td>${app.status}</td>
               <td>${
-                app.finalDecisionDate
-                  ? new Date(app.finalDecisionDate).toLocaleDateString()
+                app.dueDate
+                  ? new Date(app.dueDate).toISOString().split("T")[0] // formats as "YYYY-MM-DD"
                   : "N/A"
               }</td>
+
               <td><button class="btn btn-view btn-sm" onclick="viewApplication('${
                 app._id
               }')">View</button></td>
@@ -1180,6 +1166,7 @@
                 tbody.appendChild(tr);
               });
             }
+            updatePaginationControls(currentPage, totalPages);
           } else {
             tbody.innerHTML =
               '<tr><td colspan="7">Failed to load data</td></tr>';

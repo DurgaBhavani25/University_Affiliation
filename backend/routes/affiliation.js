@@ -117,10 +117,15 @@ router.put(
   authorizeRoles(ROLES.ADMIN),
   async (req, res) => {
     try {
-      const { collegeName, assignedTo } = req.body;
+      const { collegeName, assignedTo, dueDate } = req.body;
 
-      if (!collegeName || !assignedTo) {
-        return res.status(400).json({ message: "collegeName and assignedTo are required" });
+      if (!collegeName || !assignedTo || !dueDate) {
+        return res.status(400).json({ message: "collegeName, assignedTo, and dueDate are required" });
+      }
+
+      const parsedDueDate = new Date(dueDate);
+      if (isNaN(parsedDueDate)) {
+        return res.status(400).json({ message: "Invalid due date format" });
       }
 
       // Fetch all requests with user details
@@ -136,25 +141,28 @@ router.put(
       }
 
       // Filter only unassigned requests
-      const unassignedRequests = filteredRequests.filter(req => req.assignedTo == null && req.status !== 'assigned'
-);
+      const unassignedRequests = filteredRequests.filter(req =>
+        req.assignedTo == null && req.status !== 'assigned'
+      );
 
       if (unassignedRequests.length === 0) {
         return res.status(400).json({ message: "All requests are already assigned" });
       }
 
-      // Assign appraisal officer to each unassigned request
+      // Assign officer and due date
       const updates = await Promise.all(
         unassignedRequests.map(async (req) => {
           req.assignedTo = assignedTo;
           req.status = 'assigned';
+          req.dueDate = parsedDueDate;
           return req.save();
         })
       );
 
       res.json({
-        message: `${updates.length} requests assigned to appraisal officer`,
-        assignedTo
+        message: `${updates.length} requests assigned to appraisal officer with due date`,
+        assignedTo,
+        dueDate: parsedDueDate,
       });
     } catch (err) {
       console.error("Bulk Assignment Error:", err);
@@ -322,27 +330,26 @@ router.delete(
     }
   }
 );
-router.put("/:id", verifyToken, async (req, res) => {
+router.put("/:id", verifyToken, upload.array("supportingDocuments"), async (req, res) => {
   const { id } = req.params;
-  const userId = req.user.id; // ✅ Moved this before console.log
+  const userId = req.user.id;
 
   console.log("Received PUT /:id");
   console.log("Request Body:", req.body);
-  console.log("User ID:", userId);
-
-  const {
-    courseTitle,
-    duration,
-    intakeCapacity,
-    courseFee,
-    infrastructureDetails,
-    affiliationType,
-    facultyInfo,
-  } = req.body;
+  console.log("Uploaded Files:", req.files); // 👈 Log uploaded files
 
   try {
-    const application = await AffiliationRequest.findById(id);
+    const {
+      courseTitle,
+      duration,
+      intakeCapacity,
+      courseFee,
+      infrastructureDetails,
+      affiliationType,
+      facultyInfo,
+    } = req.body;
 
+    const application = await AffiliationRequest.findById(id);
     if (!application) {
       return res.status(404).json({ success: false, message: "Application not found." });
     }
@@ -355,16 +362,21 @@ router.put("/:id", verifyToken, async (req, res) => {
       return res.status(400).json({ success: false, message: "This application cannot be edited now." });
     }
 
-    // Update fields
+    // 🛠 Update basic fields
     application.courseTitle = courseTitle;
     application.duration = duration;
     application.intakeCapacity = intakeCapacity;
     application.courseFee = courseFee;
     application.infrastructureDetails = infrastructureDetails;
     application.affiliationType = affiliationType;
-    application.facultyInfo = facultyInfo;
+    application.facultyInfo = JSON.parse(facultyInfo);
 
-    // Reset statuses
+    // 📎 Update file references (if needed)
+    if (req.files && req.files.length > 0) {
+      application.supportingDocuments = req.files.map(file => file.filename); // or save full path if needed
+    }
+
+    // 🔄 Reset status
     application.status = "resubmitted";
     application.adminDecision = "pending";
     application.appraisalStatus = "not_verified";

@@ -13,6 +13,19 @@ router.get('/affiliated-colleges', async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 });
+router.get('/affiliated-colleges/:id', async (req, res) => {
+  try {
+    const college = await User.findById(req.params.id).select('-password');
+    if (!college) {
+      return res.status(404).json({ success: false, message: 'College not found' });
+    }
+    res.status(200).json({ success: true, data: college });
+  } catch (error) {
+    console.error('Error fetching college details:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
 // GET all appraisal officers
 router.get('/appraisals', async (req, res) => {
   try {
@@ -23,6 +36,42 @@ router.get('/appraisals', async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 });
+router.get("/appraisals/:id", async (req, res) => {
+  try {
+    const appraisal = await User.findById(req.params.id).select("-password");
+    if (!appraisal || appraisal.role !== "appraisal") {
+      return res.status(404).json({ success: false, message: "Appraisal officer not found" });
+    }
+
+    res.status(200).json({ success: true, data: appraisal });
+  } catch (err) {
+    console.error("Error fetching appraisal details:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+// Example DELETE route in Express (admin.js or similar)
+router.delete("/appraisals/:id", async (req, res) => {
+  try {
+    const deleted = await User.findByIdAndDelete(req.params.id);
+    if (!deleted || deleted.role !== "appraisal") {
+      return res.status(404).json({ success: false, message: "Appraisal officer not found" });
+    }
+
+    // ✅ Send valid JSON response
+    return res.status(200).json({
+      success: true,
+      message: "Appraisal officer deleted successfully",
+    });
+  } catch (err) {
+    console.error("Error deleting appraisal officer:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+});
+
+
 router.post("/decision/:id", async (req, res) => {
  const { id } = req.params;
 const { decision } = req.body; // 'approved', 'rejected', or 'resubmit'

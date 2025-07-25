@@ -148,7 +148,8 @@ router.post('/submit-verification/:id', authenticate, upload.array('supportingDo
       recommendation,
       verificationNotes,
       priority,
-      appraisalDocuments: files
+      appraisalDocuments: files,
+      status:"verifed"
     }, { new: true });
 
     res.status(200).json({ success: true, message: 'Verification submitted successfully', data: updatedApp });

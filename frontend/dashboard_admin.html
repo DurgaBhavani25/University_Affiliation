@@ -662,7 +662,7 @@
               <th>ID</th>
               <th>College</th>
               <th>Course</th>
-              <th>Status by apprisal</th>
+              <th>Status</th>
               <th>Date</th>
               <th>Actions</th>
             </tr>
@@ -678,7 +678,6 @@
           <thead>
             <tr>
               <th>ID</th>
-
               <th>Course</th>
               <th>Type</th>
               <th>Submitted</th>
@@ -703,7 +702,6 @@
               <th>College Name</th>
               <th>Location</th>
               <th>Affiliation Since</th>
-
               <th>Status</th>
               <th>Actions</th>
             </tr>
@@ -726,6 +724,7 @@
               <th>Department</th>
               <th>Contact</th>
               <th>Region</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -761,7 +760,6 @@
       <p><strong>College:</strong> <span id="viewCollege"></span></p>
       <p><strong>Course:</strong> <span id="viewCourse"></span></p>
       <p><strong>Status:</strong> <span id="viewStatus"></span></p>
-      <p><strong>Description:</strong> <span id="viewDescription"></span></p>
       <p><strong>Visit Date:</strong> <span id="viewVisitDate">N/A</span></p>
       <p>
         <strong>Recommendation:</strong>
@@ -879,16 +877,73 @@
           const row = document.createElement("tr");
 
           row.innerHTML = `
-        <td>${index + 1}</td>
-        <td>${appraisal.appraisalDetails?.fullName || "N/A"}</td>
-        <td>${appraisal.appraisalDetails?.designation || "N/A"}</td>
-        <td>${appraisal.appraisalDetails?.department || "N/A"}</td>
-        <td>${appraisal.appraisalDetails?.contactNumber || "N/A"}</td>
-        <td>${appraisal.appraisalDetails?.region || "N/A"}</td>
-      `;
+      <td>${index + 1}</td>
+      <td>${appraisal.appraisalDetails?.fullName || "N/A"}</td>
+      <td>${appraisal.appraisalDetails?.designation || "N/A"}</td>
+      <td>${appraisal.appraisalDetails?.department || "N/A"}</td>
+      <td>${appraisal.appraisalDetails?.contactNumber || "N/A"}</td>
+      <td>${appraisal.appraisalDetails?.region || "N/A"}</td>
+      <td>
+        <button onclick="viewAppraisal('${appraisal._id}')">View</button>
+        <button onclick="deleteAppraisal('${appraisal._id}')">Delete</button>
+      </td>
+    `;
+
           tbody.appendChild(row);
         });
       }
+      async function viewAppraisal(id) {
+        try {
+          const response = await fetch(
+            `http://localhost:5000/admin/appraisals/${id}`
+          );
+          const result = await response.json();
+
+          if (result.success) {
+            const a = result.data.appraisalDetails;
+            alert(`
+Full Name: ${a.fullName}
+Designation: ${a.designation}
+Department: ${a.department}
+Contact Number: ${a.contactNumber}
+Region: ${a.region}
+Experience: ${a.experience} years
+Bio: ${a.bio || "N/A"}
+      `);
+          } else {
+            alert("Appraisal officer not found.");
+          }
+        } catch (error) {
+          console.error("Error fetching appraisal details:", error);
+          alert("Error viewing appraisal details.");
+        }
+      }
+      async function deleteAppraisal(id) {
+        if (!confirm("Are you sure you want to delete this appraisal officer?"))
+          return;
+
+        try {
+          const response = await fetch(
+            `http://localhost:5000/admin/appraisals/${id}`,
+            {
+              method: "DELETE",
+            }
+          );
+
+          const result = await response.json();
+
+          if (result.success) {
+            alert("Appraisal officer deleted successfully.");
+            fetchAppraisals(); // Refresh the table
+          } else {
+            alert("Failed to delete appraisal officer.");
+          }
+        } catch (error) {
+          console.error("Error deleting appraisal officer:", error);
+          alert("Error deleting appraisal officer.");
+        }
+      }
+
       async function fetchAffiliatedColleges() {
         try {
           const response = await fetch(
@@ -932,6 +987,32 @@
 
           tbody.appendChild(row);
         });
+      }
+      async function viewCollege(id) {
+        try {
+          const response = await fetch(
+            `http://localhost:5000/admin/affiliated-colleges/${id}`
+          );
+          const result = await response.json();
+
+          if (result.success) {
+            const college = result.data;
+            // Display data – you can show it in a modal, or alert, or a section
+            const collegeInfo = `
+        College Name: ${college.collegeDetails?.collegeName || "N/A"}
+        Address: ${college.collegeDetails?.address || "N/A"}
+        Contact Person: ${college.collegeDetails?.contactPerson || "N/A"}
+        Contact Number: ${college.collegeDetails?.contactNumber || "N/A"}
+      `;
+
+            alert(collegeInfo); // You can replace this with modal or card view
+          } else {
+            alert("College not found");
+          }
+        } catch (error) {
+          console.error("Error fetching college details:", error);
+          alert("Something went wrong while fetching college details.");
+        }
       }
 
       let currentAppId = null;
@@ -995,6 +1076,9 @@
 
           const data = await res.json();
           allApplications = data.requests;
+          Applications = allApplications.filter(
+            (app) => app.status === "pending"
+          );
 
           if (!Array.isArray(allApplications)) {
             console.error("Expected array but got:", allApplications);
@@ -1008,7 +1092,7 @@
 
           // Group applications by collegeName
           const grouped = {};
-          allApplications.forEach((app) => {
+          Applications.forEach((app) => {
             const collegeName =
               app.submittedBy?.collegeDetails?.collegeName || "Unknown College";
             if (!grouped[collegeName]) grouped[collegeName] = [];
@@ -1031,9 +1115,10 @@
         .map((a) => `<option value="${a._id}">${a.email}</option>`)
         .join("")}
     </select>
+    <input type="date" id="due-date-${idx}" style="margin-left:10px;" />
     <button onclick="assignByCollege('${
       apps[0]._id
-    }', 'college-assign-${idx}')">Assign</button>
+    }', 'college-assign-${idx}', 'due-date-${idx}')">Assign</button>
   </td>
 `;
 
@@ -1075,12 +1160,15 @@
           console.error("Error loading applications:", error);
         }
       }
-      async function assignByCollege(appId, selectId) {
+      async function assignByCollege(appId, selectId, dueDateId) {
         const selected = document.getElementById(selectId);
-        const assignedTo = selected?.value;
+        const dueDateInput = document.getElementById(dueDateId);
 
-        if (!assignedTo) {
-          alert("Please select an officer.");
+        const assignedTo = selected?.value;
+        const dueDate = dueDateInput?.value;
+
+        if (!assignedTo || !dueDate) {
+          alert("Please select an officer and a due date.");
           return;
         }
 
@@ -1111,6 +1199,7 @@
             body: JSON.stringify({
               collegeName,
               assignedTo,
+              dueDate, // ✅ send due date to backend
             }),
           }
         );
@@ -1120,7 +1209,7 @@
           alert("Failed to assign: " + error.message);
         } else {
           alert("Successfully assigned.");
-          loadApplications(); // reload updated data
+          loadApplications();
         }
       }
 
@@ -1181,11 +1270,12 @@
       <td>${req.submittedBy?.collegeDetails?.collegeName || "N/A"}</td>
       <td>${req.courseTitle || "N/A"}</td>
       <td><span class="status-badge ${statusClass}">${
-            req.appraisalStatus || "N/A"
+            req.status || "N/A"
           }</span></td>
       <td>${new Date(req.createdAt).toISOString().split("T")[0]}</td>
       <td>
-  <button onclick="showViewModal('${req._id}')">View</button>
+<button onclick="showViewModal('${req._id}')">View</button>
+
 </td>
 
     `;
@@ -1195,37 +1285,28 @@
 
       function showViewModal(appId) {
         currentAppId = appId;
-        const app = allApplications.find((app) => app._id === appId);
+        const app = allApplications.find((a) => a._id === appId);
         if (!app) {
           alert("Application not found!");
           return;
         }
-
-        // Basic info
 
         document.getElementById("viewCollege").textContent =
           app.submittedBy?.collegeDetails?.collegeName || "N/A";
         document.getElementById("viewCourse").textContent =
           app.courseTitle || "N/A";
         document.getElementById("viewStatus").textContent = app.status || "N/A";
-        document.getElementById("viewDescription").textContent =
-          app.description || "No description";
-
-        // Appraisal info
         document.getElementById("viewVisitDate").textContent = app.visitDate
           ? new Date(app.visitDate).toISOString().split("T")[0]
           : "N/A";
-
         document.getElementById("viewRecommendation").textContent =
           app.recommendation || "N/A";
-
         document.getElementById("viewVerificationNotes").textContent =
           app.verificationNotes || "N/A";
 
-        // Documents (array of { fileName, fileUrl })
+        // Documents
         const docsContainer = document.getElementById("viewAppraisalDocs");
-        docsContainer.innerHTML = ""; // Clear existing
-
+        docsContainer.innerHTML = "";
         if (app.appraisalDocuments && app.appraisalDocuments.length > 0) {
           app.appraisalDocuments.forEach((doc) => {
             const link = document.createElement("a");
@@ -1239,10 +1320,10 @@
           docsContainer.textContent = "No documents uploaded";
         }
 
-        // Show modal and backdrop
+        // Show modal
         document.getElementById("viewModal").style.display = "block";
         document.getElementById("modalBackdrop").style.display = "block";
-        document.body.style.overflow = "hidden"; // Prevent scrolling
+        document.body.style.overflow = "hidden";
       }
 
       function closeViewModal() {
@@ -1276,55 +1357,58 @@
         populateApplicationsTable(filtered);
       }
       async function sendAdminDecision(decision) {
-    if (!currentAppId) {
-      alert("No application selected.");
-      return;
-    }
+        if (!currentAppId) {
+          alert("No application selected.");
+          return;
+        }
 
-    const token = localStorage.getItem("token");
+        const token = localStorage.getItem("token");
 
-    try {
-      const response = await fetch(`http://localhost:5000/admin/decision/${currentAppId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ decision }),
-      });
+        try {
+          const response = await fetch(
+            `http://localhost:5000/admin/decision/${currentAppId}`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({ decision }),
+            }
+          );
 
-      const result = await response.json();
+          const result = await response.json();
 
-      if (result.success) {
-        alert(`Application ${decision} successfully.`);
-        closeViewModal();
-        fetchAffiliationRequests();
-      } else {
-        alert("Failed: " + result.message);
+          if (result.success) {
+            alert(`Application ${decision} successfully.`);
+            closeViewModal();
+            fetchAffiliationRequests();
+          } else {
+            alert("Failed: " + result.message);
+          }
+        } catch (error) {
+          console.error("Error sending admin decision:", error);
+          alert("An error occurred.");
+        }
       }
-    } catch (error) {
-      console.error("Error sending admin decision:", error);
-      alert("An error occurred.");
-    }
-  }
 
-  function approveApplication() {
-    if (confirm("Are you sure you want to approve this application?")) {
-      sendAdminDecision("approved");
-    }
-  }
+      function approveApplication() {
+        if (confirm("Are you sure you want to approve this application?")) {
+          sendAdminDecision("approved");
+        }
+      }
 
-  function rejectApplication() {
-    if (confirm("Are you sure you want to reject this application?")) {
-      sendAdminDecision("rejected");
-    }
-  }
+      function rejectApplication() {
+        if (confirm("Are you sure you want to reject this application?")) {
+          sendAdminDecision("rejected");
+        }
+      }
 
-  function requestResubmission() {
-    if (confirm("Request resubmission for this application?")) {
-      sendAdminDecision("resubmit");
-    }
-  }
+      function requestResubmission() {
+        if (confirm("Request resubmission for this application?")) {
+          sendAdminDecision("resubmit");
+        }
+      }
     </script>
   </body>
 </html>
