@@ -17,7 +17,7 @@ document.getElementById("loginForm").addEventListener("submit", async function (
   const password = document.getElementById("password").value;
 
   try {
-    const response = await fetch("http://localhost:5000/api/auth/login", {
+    const response = await fetch("https://acadamiaaffiliation.onrender.com/api/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
