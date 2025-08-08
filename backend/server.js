@@ -6,22 +6,27 @@ const path=require('path')
 const app = express();
 
 const allowedOrigins = [
-  "https://academiaaffiliation.netlify.app", // your frontend deployed URL
-  "http://localhost:5500"                     // your local frontend for dev
+  "https://academiaaffiliation.netlify.app", 
+  "http://localhost:5500"                     
 ];
 
 app.use(cors({
   origin: function(origin, callback) {
-    // allow requests with no origin (like Postman or curl)
-    if (!origin) return callback(null, true);
+    if (!origin) return callback(null, true); // allow requests like Postman or curl
     if (allowedOrigins.indexOf(origin) === -1) {
       const msg = "CORS policy does not allow access from this origin.";
       return callback(new Error(msg), false);
     }
     return callback(null, true);
   },
-  credentials: true
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization'],  // allow these headers
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'] // allow these methods
 }));
+
+// Handle preflight OPTIONS requests for all routes
+app.options('*', cors());
+
 
 
 app.use(express.json());
