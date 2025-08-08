@@ -13,7 +13,7 @@
       async function loadAppraisalStats() {
         const token = localStorage.getItem("token");
         try {
-          const res = await fetch("http://localhost:5000/appraisal/stats", {
+          const res = await fetch("https://acadamiaaffiliation.onrender.com/appraisal/stats", {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -96,7 +96,7 @@
 
         try {
           const response = await fetch(
-            `http://localhost:5000/appraisal/assigned-applications?page=${page}&limit=4`,
+            `https://acadamiaaffiliation.onrender.com/appraisal/assigned-applications?page=${page}&limit=4`,
             {
               method: "GET",
               headers: {
@@ -225,7 +225,7 @@
       // Load Profile Data on Page Load
       window.addEventListener("DOMContentLoaded", async () => {
         try {
-          const res = await fetch("http://localhost:5000/appraisal/profile", {
+          const res = await fetch("https://acadamiaaffiliation.onrender.com/appraisal/profile", {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -273,7 +273,7 @@
             designation: document.getElementById("designation1").value,
           };
           try {
-            const res = await fetch("http://localhost:5000/appraisal/profile", {
+            const res = await fetch("https://acadamiaaffiliation.onrender.com/appraisal/profile", {
               method: "PUT",
               headers: {
                 "Content-Type": "application/json",
