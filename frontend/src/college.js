@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
     window.location.href = "login.html";
     return;
   }
-  fetch("http://localhost:5000/api/profile", {
+  fetch("https://acadamiaaffiliation.onrender.com/api/profile", {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -52,7 +52,7 @@ document
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/profile/update", {
+      const response = await fetch("https://acadamiaaffiliation.onrender.com/api/profile/update", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -170,8 +170,8 @@ function initDashboard() {
 
       const method = isEdit ? "PUT" : "POST";
       const url = isEdit
-        ? `http://localhost:5000/api/affiliations/${appId}`
-        : `http://localhost:5000/api/affiliations`;
+        ? `https://acadamiaaffiliation.onrender.com/api/affiliations/${appId}`
+        : `https://acadamiaaffiliation.onrender.com/api/affiliations`;
 
       fetch(url, {
         method,
@@ -241,7 +241,7 @@ async function loadApplications() {
 
   try {
     const response = await fetch(
-      "http://localhost:5000/api/affiliations/my-requests",
+      "https://acadamiaaffiliation.onrender.com/api/affiliations/my-requests",
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -349,7 +349,7 @@ function viewApplication(appId) {
   const token = localStorage.getItem("token");
   if (!token) return;
 
-  fetch(`http://localhost:5000/api/affiliations/${appId}`, {
+  fetch(`https://acadamiaaffiliation.onrender.com/api/affiliations/${appId}`, {
     headers: { Authorization: `Bearer ${token}` },
   })
     .then((response) => {
@@ -420,7 +420,7 @@ function viewApplication(appId) {
 
                           .map(
                             (doc) =>
-                              `<a href="http://localhost:5000${doc.fileUrl}" target="_blank">
+                              `<a href="https://acadamiaaffiliation.onrender.com${doc.fileUrl}" target="_blank">
       <i class="fas fa-file-alt"></i> ${doc.fileName}
     </a>`
                           )
@@ -482,7 +482,7 @@ function viewApplication(appId) {
 function populateResubmissionForm(appId) {
   closeModal(); // Hide modal
 
-  fetch(`http://localhost:5000/api/affiliations/${appId}`, {
+  fetch(`https://acadamiaaffiliation.onrender.com/api/affiliations/${appId}`, {
     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
   })
     .then((res) => res.json())
@@ -517,7 +517,7 @@ function deleteApplication(appId, fromModal = false) {
   const token = localStorage.getItem("token");
   if (!token) return;
 
-  fetch(`http://localhost:5000/api/affiliations/${appId}`, {
+  fetch(`https://acadamiaaffiliation.onrender.com/api/affiliations/${appId}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` },
   })
