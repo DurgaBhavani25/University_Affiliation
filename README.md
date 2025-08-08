@@ -54,11 +54,19 @@ It supports **multiple roles** — Admin, College, and Appraisal — with dedica
 
 | Layer             | Technology Used                  |
 |-------------------|----------------------------------|
-| **Frontend**      | HTML, CSS, JavaScript, Bootstrap |
+| **Frontend**      | HTML, CSS, JavaScript            |
 | **Backend**       | Node.js, Express.js              |
 | **Database**      | MongoDB                          |
 | **Authentication**| JWT                              |
-| **API Handling**  | Fetch API / Axios                |
+| **API Handling**  | Fetch API                        |
+
+---
+## ​​​ Author  
+**Poosarla Durga Bhavani**
+
+📧 Email: your.email@example.com
+
+💼 GitHub: [DurgaBhavani25](https://github.com/DurgaBhavani25/)
 
 ---
 
@@ -68,3 +76,4 @@ It supports **multiple roles** — Admin, College, and Appraisal — with dedica
 ```bash
 git clone https://github.com/DurgaBhavani25/University_Affiliation
 cd University_Affiliation
+---
