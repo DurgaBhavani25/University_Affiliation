@@ -5,8 +5,21 @@ const connectDB = require('./config/db');
 const path=require('path')
 const app = express();
 
+const allowedOrigins = [
+  "https://academiaaffiliation.netlify.app", // your frontend deployed URL
+  "http://localhost:5500"                     // your local frontend for dev
+];
+
 app.use(cors({
-  origin: "http://localhost:5500", // or your frontend URL
+  origin: function(origin, callback) {
+    // allow requests with no origin (like Postman or curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = "CORS policy does not allow access from this origin.";
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
   credentials: true
 }));
 
