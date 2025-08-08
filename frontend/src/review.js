@@ -16,7 +16,7 @@ async function fetchApplicationById() {
   const token = localStorage.getItem("token");
   try {
     const response = await fetch(
-      `http://localhost:5000/appraisal/application/${appId}`,
+      `https://acadamiaaffiliation.onrender.com/appraisal/application/${appId}`,
       {
         method: "GET",
         headers: {
@@ -53,7 +53,7 @@ async function fetchApplicationById() {
 
       if (app.supportingDocuments?.length > 0) {
         const links = app.supportingDocuments.map((doc) => {
-          return `<a href="http://localhost:5000${doc.fileUrl}" target="_blank">${doc.fileName}</a>`;
+          return `<a href="https://acadamiaaffiliation.onrender.com${doc.fileUrl}" target="_blank">${doc.fileName}</a>`;
         });
         documentsContainer.innerHTML = links.join(", "); // or use '<br>' to show each on new line
       } else {
@@ -174,7 +174,7 @@ document
 
     try {
       const response = await fetch(
-        `http://localhost:5000/appraisal/submit-verification/${appId}`,
+        `https://acadamiaaffiliation.onrender.com/appraisal/submit-verification/${appId}`,
         {
           method: "POST",
           headers: {
