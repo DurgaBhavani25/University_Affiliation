@@ -19,7 +19,7 @@ async function assignAppraisal(appId) {
 
   try {
     const res = await fetch(
-      `http://localhost:5000/api/affiliations/assign/${appId}`,
+      `https://acadamiaaffiliation.onrender.com/api/affiliations/assign/${appId}`,
       {
         method: "PUT",
         headers: {
@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 async function fetchAppraisals() {
   try {
-    const res = await fetch("http://localhost:5000/admin/appraisals");
+    const res = await fetch("https://acadamiaaffiliation.onrender.com/admin/appraisals");
     const result = await res.json();
 
     if (result.success) {
@@ -100,7 +100,7 @@ function populateAppraisalTable(appraisals) {
 async function viewAppraisal(id) {
   try {
     const response = await fetch(
-      `http://localhost:5000/admin/appraisals/${id}`
+      `https://acadamiaaffiliation.onrender.com/admin/appraisals/${id}`
     );
     const result = await response.json();
 
@@ -134,7 +134,7 @@ async function deleteAppraisal(id) {
 
   try {
     const response = await fetch(
-      `http://localhost:5000/admin/appraisals/${id}`,
+      `https://acadamiaaffiliation.onrender.com/admin/appraisals/${id}`,
       {
         method: "DELETE",
       }
@@ -157,7 +157,7 @@ async function deleteAppraisal(id) {
 async function fetchAffiliatedColleges() {
   try {
     const response = await fetch(
-      "http://localhost:5000/admin/affiliated-colleges"
+      "https://acadamiaaffiliation.onrender.com/admin/affiliated-colleges"
     );
     const result = await response.json();
     if (result.success) {
@@ -204,7 +204,7 @@ function populateCollegeTable(colleges) {
 async function viewCollege(id) {
   try {
     const response = await fetch(
-      `http://localhost:5000/admin/affiliated-colleges/${id}`
+      `https://acadamiaaffiliation.onrender.com/admin/affiliated-colleges/${id}`
     );
     const result = await response.json();
 
@@ -241,7 +241,7 @@ async function fetchAffiliationRequests() {
       return;
     }
 
-    const res = await fetch("http://localhost:5000/api/affiliations/all", {
+    const res = await fetch("https://acadamiaaffiliation.onrender.com/api/affiliations/all", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -278,7 +278,7 @@ function populateDashboardCounts(requests) {
 let allApplications = [];
 async function loadApplications() {
   try {
-    const res = await fetch("http://localhost:5000/api/affiliations/all", {
+    const res = await fetch("https://acadamiaaffiliation.onrender.com/api/affiliations/all", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -387,7 +387,7 @@ async function assignByCollege(appId, selectId, dueDateId) {
   const collegeName = application.submittedBy?.collegeDetails?.collegeName;
 
   const res = await fetch(
-    "http://localhost:5000/api/affiliations/assign-by-college",
+    "https://acadamiaaffiliation.onrender.com/api/affiliations/assign-by-college",
     {
       method: "PUT",
       headers: {
@@ -420,7 +420,7 @@ function toggleGroup(groupClass) {
 
 async function loadAppraisalOfficers() {
   try {
-    const res = await fetch("http://localhost:5000/api/users?role=appraisal", {
+    const res = await fetch("https://acadamiaaffiliation.onrender.com/api/users?role=appraisal", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -561,7 +561,7 @@ async function sendAdminDecision(decision) {
 
   try {
     const response = await fetch(
-      `http://localhost:5000/admin/decision/${currentAppId}`,
+      `https://acadamiaaffiliation.onrender.com/admin/decision/${currentAppId}`,
       {
         method: "POST",
         headers: {
