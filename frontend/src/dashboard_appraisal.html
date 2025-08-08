@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Appraisal Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="appraisal.css">
+  </head>
+
+  <body>
+    <header class="main-header">
+      <div class="header-left">
+        
+        <h3><i class="fas fa-graduation-cap"></i>AcademiaAffiliation</h3>
+      </div>
+      <div class="header-right">
+        <div>
+          <span>Welcome, </span>
+          <span id="officerNameHeader" class="officer-name"
+            >Appraisal Officer</span
+          >
+        </div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <nav class="nav__cont">
+        <ul class="nav">
+          <li class="nav__items active" onclick="showSection('assigned')">
+            <i class="fas fa-clipboard-list"></i>
+            <a href="#" class="active">Assigned Applications</a>
+          </li>
+          <li class="nav__items" onclick="showSection('profile')">
+            <i class="fas fa-user-circle"></i>
+            <a href="#">My Profile</a>
+          </li>
+          <li class="nav__items" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <button id="logoutBtn">Logout</button>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Main Content -->
+      <main>
+        <section id="profile" class="section">
+          <div class="section-header">
+            <h2>My Profile</h2>
+          </div>
+
+          <div class="profile-container">
+            <div class="profile-header">
+              <div class="avatar">
+                <i class="fas fa-user-circle"></i>
+              </div>
+              <div class="profile-info">
+                <h3 id="profileName"></h3>
+                <p id="designation"></p>
+                <p class="email"></p>
+              </div>
+            </div>
+
+            <div class="profile-details">
+              <h4>Personal Information</h4>
+              <form id="profileForm">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="fullName"
+                      disabled
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input
+                      type="email1"
+                      class="form-control"
+                      id="email"
+                      disabled
+                    />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Phone Number</label>
+                    <input type="tel" class="form-control" id="phone" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Department</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      value="Accreditation & Quality Assurance"
+                      id="department"
+                    />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Designation</label>
+                    <select class="form-control" id="designation1">
+                      <option value="Professor">professor</option>
+                      <option value="Affiliation Officer">
+                        Affiliation Officer
+                      </option>
+                      <option value="Inspection Officer">
+                        Inspection Officer
+                      </option>
+                      <option value="Accreditation Evaluator">
+                        Accreditation Evaluator
+                      </option>
+                      <option value="Quality Assurance Officer">
+                        Quality Assurance Officer
+                      </option>
+                      <option value="University Representative">
+                        University Representative
+                      </option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Years of Experience</label>
+                    <input type="number" class="form-control" id="experience" />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Bio</label>
+                  <textarea class="form-control" rows="3" id="bio"></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Password Change</label>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <input
+                        type="password"
+                        class="form-control"
+                        id="currentPassword"
+                        placeholder="Current Password"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <input
+                        type="password"
+                        class="form-control"
+                        id="newPassword"
+                        placeholder="New Password"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <input
+                        type="password"
+                        class="form-control"
+                        id="confirmPassword"
+                        placeholder="Confirm Password"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                  <button type="submit" class="btn-submit">
+                    <i class="fas fa-save"></i> Save Changes
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+        <!-- Dashboard Stats -->
+        <section id="dashboard-stats" class="section">
+          <div class="section-header">
+            <h2>Appraisal Overview</h2>
+          </div>
+
+          <div class="stats-container">
+            <div class="stat-card">
+              <div class="stat-value"></div>
+              <div class="stat-label">Total Assignments</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value"></div>
+              <div class="stat-label">Pending Review</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value"></div>
+              <div class="stat-label">Approved</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value"></div>
+              <div class="stat-label">Rejected</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Assigned Applications Section -->
+        <section id="assigned" class="section active">
+          <div class="section-header">
+            <h2>Assigned Applications</h2>
+            <div>
+              <input
+                type="text"
+                id="searchInput"
+                class="form-control"
+                placeholder="Search applications..."
+                style="width: 200px; display: inline-block"
+              />
+              <button class="btn btn-view btn-sm" id="searchBtn">
+                <i class="fas fa-filter"></i> Filter
+              </button>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>S.No</th>
+                  <th>College Name</th>
+                  <th>Course</th>
+                  <th>Type</th>
+                  <th>Status</th>
+                  <th>Due Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="assignedAppsBody"></tbody>
+            </table>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center mt-20">
+            <div>Showing 1 to 4 of 24 entries</div>
+            <div>
+              <div>
+                <button id="prevPageBtn" class="btn btn-view btn-sm">
+                  <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                <button id="nextPageBtn" class="btn btn-view btn-sm">
+                  Next <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer>&copy; 2025 AcademiaAffiliation | All rights reserved.</footer>
+
+    <script src="appraisal.js"></script>
+  </body>
+</html>

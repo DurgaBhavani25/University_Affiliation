@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Appraisal Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="review.css">
+  </head>
+
+  <body>
+    <header class="main-header">
+      <div class="header-left">
+       
+        <h3><i class="fas fa-graduation-cap"></i> AcademiaAffiliation</h3>
+      
+      </div>
+    </header>
+
+    <div class="layout">
+      <nav class="nav__cont">
+        <ul class="nav">
+          <li class="nav__items active" onclick="showSection('assigned')">
+            <i class="fas fa-clipboard-list"></i>
+            <a href="dashboard_appraisal.html" class="active"
+              >Assigned Applications</a
+            >
+          </li>
+          <li class="nav__items" onclick="showSection('profile')">
+            <i class="fas fa-user-circle"></i>
+            <a href="dashboard_appraisal.html">My Profile</a>
+          </li>
+          <li class="nav__items" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <button id="logoutBtn">Logout</button>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Main Content -->
+      <main>
+        <section id="review" class="section">
+          <div class="section-header">
+            <h2>Application Details</h2>
+          </div>
+
+          <!-- Application Details Section -->
+          <div class="application-details">
+            <div class="detail-card">
+              <h3>College Information</h3>
+              <div class="detail-item">
+                <span class="detail-label">College Name:</span>
+                <span class="detail-value" id="collegeName">-</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Contact Email:</span>
+                <span class="detail-value" id="email">-</span>
+              </div>
+            </div>
+
+            <div class="detail-card">
+              <h3>Course Details</h3>
+              <div class="detail-item">
+                <span class="detail-label">Course Title:</span>
+                <span class="detail-value" id="courseTitle">-</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Affiliation Type:</span>
+                <span class="detail-value" id="affiliationType">-</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Status:</span>
+                <span class="detail-value"
+                  ><span class="status-badge status-pending" id="status"
+                    >-</span
+                  ></span
+                >
+              </div>
+            </div>
+
+            <div class="detail-card">
+              <h3>Appraisal Information</h3>
+              <div class="detail-item">
+                <span class="detail-label">Decision Date:</span>
+                <span class="detail-value" id="finalDecisionDate">-</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Appraisal Status:</span>
+                <span class="detail-value"
+                  ><span
+                    class="status-badge status-under-review"
+                    id="appraisalStatus"
+                    >-</span
+                  ></span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-card mb-20">
+            <h3>Additional Information</h3>
+            <div class="detail-item">
+              <span class="detail-label">Infrastructure Details:</span>
+              <span class="detail-value" id="infrastructureDetails">-</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Faculty Name:</span>
+              <span class="detail-value" id="facultyName">-</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Faculty Qualification:</span>
+              <span class="detail-value" id="facultyQualification">-</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Course Fee:</span>
+              <span class="detail-value" id="courseFee">-</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Documents uploaded:</span>
+              <span class="detail-value" id="Documents_uploaded">-</span>
+            </div>
+          </div>
+
+          <!-- Verification Form Section -->
+          <div class="section-header">
+            <h2>Submit Verification</h2>
+          </div>
+
+          <form
+            id="verificationForm"
+            class="verification-form"
+            action="/appraisal/submit-verification/<%= appId %>"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <div class="form-row">
+              <div class="form-group">
+                <label for="visitDate" class="form-label"
+                  >Site Visit Date</label
+                >
+                <input
+                  type="date"
+                  id="visitDate"
+                  class="form-control"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="recommendation" class="form-label"
+                  >Recommendation</label
+                >
+                <select id="recommendation" class="form-control" required>
+                  <option value="">-- Select Recommendation --</option>
+                  <option value="approve">Approve</option>
+                  <option value="reject">Reject</option>
+                  <option value="resubmit">Request Resubmission</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="verificationNotes" class="form-label"
+                >Verification Notes</label
+              >
+              <textarea
+                id="verificationNotes"
+                rows="4"
+                class="form-control"
+                placeholder="Include details of site visit, document verification, faculty interviews, etc."
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Priority</label>
+              <div
+                style="
+                  display: flex;
+                  gap: 15px;
+                  align-items: center;
+                  margin-top: 8px;
+                "
+              >
+                <label style="display: flex; align-items: center; gap: 5px">
+                  <input type="radio" name="priority" value="normal" checked />
+                  Normal
+                </label>
+                <label style="display: flex; align-items: center; gap: 5px">
+                  <input type="radio" name="priority" value="high" /> High
+                </label>
+                <label style="display: flex; align-items: center; gap: 5px">
+                  <input type="radio" name="priority" value="urgent" /> Urgent
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Upload Supporting Documents</label>
+              <div class="file-upload">
+                <input
+                  type="file"
+                  id="supportingDocs"
+                  multiple
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  style="display: none"
+                />
+                <label for="supportingDocs">
+                  <i class="fas fa-cloud-upload-alt"></i>
+                  <p>Drag & drop files here or click to browse</p>
+                  <small style="color: var(--gray-color)"
+                    >Max file size: 10MB each (PDF, JPG, PNG)</small
+                  >
+                </label>
+              </div>
+              <div id="fileList" class="file-list"></div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-20">
+              <button type="reset" class="btn btn-reject">
+                <i class="fas fa-times"></i> Cancel
+              </button>
+              <button type="submit" class="btn-submit">
+                <i class="fas fa-paper-plane"></i> Submit Verification
+              </button>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <footer>&copy; 2025 AcademiaAffiliation | All rights reserved.</footer>
+
+    <script src="review.js"></script>
+  </body>
+</html>

@@ -369,7 +369,12 @@ router.put("/:id", verifyToken, upload.array("supportingDocuments"), async (req,
     application.courseFee = courseFee;
     application.infrastructureDetails = infrastructureDetails;
     application.affiliationType = affiliationType;
-    application.facultyInfo = JSON.parse(facultyInfo);
+    try {
+  application.facultyInfo = facultyInfo ? JSON.parse(facultyInfo) : {};
+} catch (parseErr) {
+  return res.status(400).json({ success: false, message: "Invalid facultyInfo format" });
+}
+
 
     // 📎 Update file references (if needed)
     if (req.files && req.files.length > 0) {

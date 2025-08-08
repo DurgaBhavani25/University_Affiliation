@@ -27,7 +27,7 @@ const affiliationRequestSchema = new mongoose.Schema({
   ],
   status: {
   type: String,
-  enum: ["pending", "assigned", "under_review", "approved", "rejected", "resubmitted"], // ✅ changed 'resubmit' to 'resubmitted'
+  enum: ["pending", "assigned", "approved", "rejected", "resubmit","resubmitted"], // ✅ changed 'resubmit' to 'resubmitted'
   default: "pending",
 },
 dueDate: {

@@ -45,7 +45,7 @@ router.post('/register', async (req, res) => {
 
 
   router.post("/login", async (req, res) => {
-  console.log("Login attempt body:", req.body);  // Add this
+   // Add this
   const { email, password, role } = req.body;
 
 

@@ -110,69 +110,96 @@ function initDashboard() {
   if (collegeName) {
     document.getElementById("collegeName").textContent = collegeName;
   }
-document.getElementById("affiliationForm").addEventListener("submit", function (e) {
-  e.preventDefault();
+  document
+    .getElementById("affiliationForm")
+    .addEventListener("submit", function (e) {
+      e.preventDefault();
 
-  const appId = document.getElementById("collegeId").value;
-  const isEdit = !!appId;
+      const appId = document.getElementById("collegeId").value;
+      const isEdit = !!appId;
 
-  const formData = new FormData();
+      const formData = new FormData();
 
-  // Append basic fields
-  formData.append("courseTitle", document.getElementById("courseName").value);
-  formData.append("duration", document.getElementById("courseDuration").value);
-  formData.append("intakeCapacity", document.getElementById("intake").value);
-  formData.append("courseFee", document.getElementById("courseFee").value);
-  formData.append("infrastructureDetails", document.getElementById("infrastructure").value);
-  formData.append("affiliationType", document.getElementById("affiliationType").value);
+      // Append basic fields
+      formData.append(
+        "courseTitle",
+        document.getElementById("courseName").value
+      );
+      formData.append(
+        "duration",
+        document.getElementById("courseDuration").value
+      );
+      formData.append(
+        "intakeCapacity",
+        document.getElementById("intake").value
+      );
+      formData.append("courseFee", document.getElementById("courseFee").value);
+      formData.append(
+        "infrastructureDetails",
+        document.getElementById("infrastructure").value
+      );
+      formData.append(
+        "affiliationType",
+        document.getElementById("affiliationType").value
+      );
 
-  // Append facultyInfo as stringified JSON
-  const faculty = {
-    name: document.getElementById("facultyName").value,
-    qualification: document.getElementById("facultyQualification").value,
-  };
-  formData.append("facultyInfo", JSON.stringify(faculty));
+      // Append facultyInfo as stringified JSON
+      const faculty = {
+        name: document.getElementById("facultyName").value,
+        qualification: document.getElementById("facultyQualification").value,
+      };
+      formData.append(
+        "facultyInfo",
+        JSON.stringify({
+          name: document.getElementById("facultyName").value || "",
+          qualification:
+            document.getElementById("facultyQualification").value || "",
+        })
+      );
 
-  // Append files
-  const fileInput = document.getElementById("documentUpload");
-if (!fileInput) {
-  console.error("❌ File input not found.");
-  return;
-}
-const files = fileInput.files;
-for (let i = 0; i < files.length; i++) {
-  formData.append("supportingDocuments", files[i]); // 'supportingDocuments' is the name field
-}
+      // Append files
+      const fileInput = document.getElementById("documentUpload");
+      if (!fileInput) {
+        console.error("❌ File input not found.");
+        return;
+      }
+      const files = fileInput.files;
+      for (let i = 0; i < files.length; i++) {
+        formData.append("supportingDocuments", files[i]); // 'supportingDocuments' is the name field
+      }
 
+      const method = isEdit ? "PUT" : "POST";
+      const url = isEdit
+        ? `http://localhost:5000/api/affiliations/${appId}`
+        : `http://localhost:5000/api/affiliations`;
 
-  const method = isEdit ? "PUT" : "POST";
-  const url = isEdit
-    ? `http://localhost:5000/api/affiliations/${appId}`
-    : `http://localhost:5000/api/affiliations`;
-
-  fetch(url, {
-    method,
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-      // ⛔️ Don't set Content-Type manually when using FormData
-    },
-    body: formData,
-  })
-    .then((res) => {
-      if (!res.ok) throw new Error("Failed to submit/resubmit application");
-      return res.json();
-    })
-    .then(() => {
-      alert(isEdit ? "Application resubmitted successfully!" : "Application submitted!");
-      document.getElementById("affiliationForm").reset();
-      // Optionally refresh dashboard
-      loadApplications();
-    })
-    .catch((err) => {
-      console.error("Submission error:", err);
-      alert("An error occurred while submitting.");
+      fetch(url, {
+        method,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          // ⛔️ Don't set Content-Type manually when using FormData
+        },
+        body: formData,
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error("Failed to submit/resubmit application");
+          return res.json();
+        })
+        .then(() => {
+          alert(
+            isEdit
+              ? "Application resubmitted successfully!"
+              : "Application submitted!"
+          );
+          document.getElementById("affiliationForm").reset();
+          // Optionally refresh dashboard
+          loadApplications();
+        })
+        .catch((err) => {
+          console.error("Submission error:", err);
+          alert("An error occurred while submitting.");
+        });
     });
-});
   document
     .getElementById("documentUpload")
     .addEventListener("change", function () {
@@ -200,8 +227,6 @@ for (let i = 0; i < files.length; i++) {
   // Load applications table
   loadApplications();
 }
-
-
 
 async function loadApplications() {
   const token = localStorage.getItem("token");
@@ -430,7 +455,8 @@ function viewApplication(appId) {
     <button class="modal-btn modal-btn-secondary" onclick="closeModal()">Close</button>
     <button class="modal-btn modal-btn-primary" onclick="deleteApplication('${application._id}', true)">Delete Application</button>
   `;
-      } if (application.adminDecision === "resubmit") {
+      }
+      if (application.adminDecision === "resubmit") {
         actionsHtml = `
     <button class="modal-btn modal-btn-secondary" onclick="closeModal()">Close</button>
     <button class="modal-btn modal-btn-warning" onclick="populateResubmissionForm('${application._id}')">
@@ -464,9 +490,12 @@ function populateResubmissionForm(appId) {
       document.getElementById("courseName").value = app.courseTitle;
       document.getElementById("courseDuration").value = app.duration;
       document.getElementById("intake").value = app.intakeCapacity;
-      document.getElementById("facultyName").value = app.facultyInfo?.name || "";
-      document.getElementById("facultyQualification").value = app.facultyInfo?.qualification || "";
-      document.getElementById("infrastructure").value = app.infrastructureDetails;
+      document.getElementById("facultyName").value =
+        app.facultyInfo?.name || "";
+      document.getElementById("facultyQualification").value =
+        app.facultyInfo?.qualification || "";
+      document.getElementById("infrastructure").value =
+        app.infrastructureDetails;
       document.getElementById("courseFee").value = app.courseFee;
       document.getElementById("affiliationType").value = app.affiliationType;
       document.getElementById("collegeId").value = app._id; // store ID for PUT
@@ -477,7 +506,6 @@ function populateResubmissionForm(appId) {
       alert("Failed to load application for resubmission.");
     });
 }
-
 
 function closeModal() {
   document.getElementById("viewModal").style.display = "none";

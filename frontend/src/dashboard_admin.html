@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Dashboard - Affiliation Management</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <link rel="stylesheet" href="admin.css">
+  </head>
+  <body>
+    <header class="main-header">
+      <div class="header-left">
+        
+        <h3><i class="fas fa-graduation-cap"></i> AcademiaAffiliation</h3>
+      </div>
+      <div class="header-right">
+        <span>Welcome, </span>
+        <span id="adminNameHeader" class="admin-name">Admin</span>
+      </div>
+    </header>
+
+    <!-- Sidebar -->
+    <nav class="nav__cont">
+      <ul class="nav">
+        <li class="nav__items">
+          <a
+            href="#dashboard"
+            class="active"
+            onclick="showSection('dashboard')"
+          >
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+          </a>
+        </li>
+        <li class="nav__items">
+          <a href="#applications" onclick="showSection('applications')">
+            <i class="fas fa-clipboard-list"></i> Applications
+          </a>
+        </li>
+        <li class="nav__items">
+          <a href="#colleges" onclick="showSection('colleges')">
+            <i class="fas fa-university"></i> Colleges
+          </a>
+        </li>
+        <li class="nav__items">
+          <a href="#appraisals" onclick="showSection('appraisers')">
+            <i class="fas fa-user-tie"></i> Appraisers
+          </a>
+        </li>
+        <li class="nav__items">
+          <button id="logoutBtn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+      <!-- Dashboard Section -->
+      <section id="dashboard" class="section active">
+        <h2>Admin Dashboard</h2>
+
+        <div class="card-container">
+          <div class="card">
+            <h3>Total Applications</h3>
+            <p></p>
+          </div>
+          <div class="card">
+            <h3>Pending Review</h3>
+            <p class="orange"></p>
+          </div>
+          <div class="card">
+            <h3>Approved</h3>
+            <p class="green"></p>
+          </div>
+          <div class="card">
+            <h3>Rejected</h3>
+            <p class="red"></p>
+          </div>
+        </div>
+
+        <div class="filters">
+          <div>
+            <input
+              type="text"
+              id="searchApplications"
+              placeholder="Search applications..."
+            />
+            <button class="btn btn-view" onclick="searchApplications()">
+              Search
+            </button>
+          </div>
+          <div>
+            <select id="statusFilter" onchange="filterApplications()">
+              <option value="all">All Status</option>
+              <option value="pending">Pending</option>
+              <option value="approved">Approved</option>
+              <option value="rejected">Rejected</option>
+            </select>
+          </div>
+        </div>
+
+        <table id="recentApplications">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>College</th>
+              <th>Course</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+
+      <!-- Applications Section -->
+      <section id="applications" class="section">
+        <h2>Manage Applications</h2>
+        <table id="allApplications">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Course</th>
+              <th>Type</th>
+              <th>Submitted</th>
+              <th>Status</th>
+              <th>Appraiser</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Will be populated dynamically -->
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Colleges Section -->
+      <section id="colleges" class="section">
+        <h2>Affiliated Colleges</h2>
+        <table id="collegesTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>College Name</th>
+              <th>Location</th>
+              <th>Affiliation Since</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Will be populated dynamically -->
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Appraisers Section -->
+      <section id="appraisals" class="section">
+        <h2>Appraisal Officers</h2>
+        <table id="appraisalTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Full Name</th>
+              <th>Designation</th>
+              <th>Department</th>
+              <th>Contact</th>
+              <th>Region</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Will be populated dynamically -->
+          </tbody>
+        </table>
+      </section>
+    </main>
+
+    <!-- Application Detail Modal -->
+    <div id="applicationModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Application Details</h3>
+          <span class="close-modal" onclick="closeModal()">&times;</span>
+        </div>
+        <div id="modalBody">
+          <!-- Content will be loaded here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Add this right before your footer -->
+    <div
+      id="modalBackdrop"
+      class="modal-backdrop"
+      onclick="closeViewModal()"
+    ></div>
+
+    <!-- Update your view modal to this structure -->
+    <div id="viewModal">
+      <h3>Application Details</h3>
+      <p><strong>College:</strong> <span id="viewCollege"></span></p>
+      <p><strong>Course:</strong> <span id="viewCourse"></span></p>
+      <p><strong>Status:</strong> <span id="viewStatus"></span></p>
+      <p><strong>Visit Date:</strong> <span id="viewVisitDate">N/A</span></p>
+      <p>
+        <strong>Recommendation:</strong>
+        <span id="viewRecommendation">N/A</span>
+      </p>
+      <p>
+        <strong>Verification Notes:</strong>
+        <span id="viewVerificationNotes">N/A</span>
+      </p>
+      <p>
+        <strong>Supporting Documents:</strong>
+        <span id="viewAppraisalDocs">N/A</span>
+      </p>
+
+      <!-- Action buttons -->
+      <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap">
+        <button class="btn btn-success" onclick="approveApplication()">
+          <i class="fas fa-check-circle"></i> Approve
+        </button>
+        <button class="btn btn-danger" onclick="rejectApplication()">
+          <i class="fas fa-times-circle"></i> Reject
+        </button>
+        <button
+          class="btn btn-warning text-dark"
+          onclick="requestResubmission()"
+        >
+          <i class="fas fa-redo"></i> Resubmission
+        </button>
+        <button class="btn btn-secondary" onclick="closeViewModal()">
+          <i class="fas fa-times"></i> Close
+        </button>
+      </div>
+    </div>
+    <div
+      class="modal fade"
+      id="detailsModal"
+      tabindex="-1"
+      aria-labelledby="detailsModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="detailsModalLabel">Details</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body" id="detailsModalBody">
+            <!-- Dynamic content will appear here -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Bootstrap 5 JS + Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+
+    <footer>
+      &copy; 2025 University Affiliation System. All rights reserved.
+    </footer>
+    <script src="admin.js"></script>
+  </body>
+</html>
