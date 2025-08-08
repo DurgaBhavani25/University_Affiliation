@@ -5,6 +5,9 @@ The **Academia Affiliation Management System** is a web-based application design
 It supports **multiple roles** — Admin, College, and Appraisal — with dedicated dashboards and workflows for each.
 
 ---
+## LIVE DEMO
+https://academiaaffiliation.netlify.app/
+----
 
 ## 🚀 Features
 
