@@ -6,7 +6,7 @@ const path=require('path')
 const app = express();
 
 app.use(cors({
-  origin: "http://localhost:5500", // or your frontend URL
+  origin: "https://acadamiaaffiliation.onrender.com", // or your frontend URL
   credentials: true
 }));
 
